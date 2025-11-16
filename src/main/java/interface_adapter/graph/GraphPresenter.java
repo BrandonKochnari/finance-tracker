@@ -1,4 +1,4 @@
-package interface_adapter;
+package interface_adapter.graph;
 
 import use_case.graph.GraphOutputBoundary;
 import use_case.graph.GraphOutputData;
@@ -17,7 +17,15 @@ public class GraphPresenter implements GraphOutputBoundary {
         // update change for every attribute in data unless its null
         if (data.getSelectedRange() != null)
             graphState.setSelectedRange(data.getSelectedRange());
-
+        if (data.getSelectedType() != null)
+            graphState.setSelectedType(data.getSelectedType());
+        if (data.getBar() != null)
+            graphState.setBar(data.getBar());
+        if (data.getPie() != null)
+            graphState.setPie(data.getPie());
+        gvm.firePropertyChange();
+        
+        //TODO: implement ALERT logic
     }
 
     @Override

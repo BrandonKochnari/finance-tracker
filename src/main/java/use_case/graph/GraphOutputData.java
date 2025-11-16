@@ -1,33 +1,37 @@
 package use_case.graph;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GraphOutputData {
-    private final String selectedRange;
-    private final String selectedType;
-    private final List<Long> x;
-    private final List<Double> y;
-    private final Map<String, Double> pie;
-    private final List<String> alerts;
+    private String selectedRange;
+    private String selectedType;
+    private Map<Integer, Float> bar;
+    private Map<String, Double> pie;
+    private List<String> alerts;
 
     public GraphOutputData(String selectedRange,
             String selectedType,
-            List<Long> x,
-            List<Double> y,
+            List<Integer> x,
+            List<Float> y,
             Map<String, Double> pie,
             List<String> alerts) {
         this.selectedRange = selectedRange;
         this.selectedType = selectedType;
-        if (x != null) {
-            this.x = new ArrayList<>(x);
-        }
 
-        if (y != null) {
-            this.y = new ArrayList<>(y);
+        // build the bar map from parallel x and y lists if provided
+        this.bar = new HashMap<>();
+        if (x != null && y != null) {
+            int n = Math.min(x.size(), y.size());
+            for (int i = 0; i < n; i++) {
+                Integer key = x.get(i);
+                Float val = y.get(i);
+                if (key != null && val != null) {
+                    this.bar.put(key, val);
+                }
+            }
         }
 
         if (pie != null) {
@@ -48,19 +52,27 @@ public class GraphOutputData {
         return selectedType;
     }
 
-    public List<Long> getX() {
-        return Collections.unmodifiableList(x);
+    public List<Integer> getX() {
+        if (bar == null)
+            return null;
+        return new ArrayList<>(bar.keySet());
     }
 
-    public List<Double> getY() {
-        return Collections.unmodifiableList(y);
+    public List<Float> getY() {
+        if (bar == null)
+            return null;
+        return new ArrayList<>(bar.values());
     }
 
     public Map<String, Double> getPie() {
-        return Collections.unmodifiableMap(pie);
+        return pie;
+    }
+
+    public Map<Integer, Float> getBar() {
+        return bar;
     }
 
     public List<String> getAlerts() {
-        return Collections.unmodifiableList(alerts);
+        return alerts;
     }
 }

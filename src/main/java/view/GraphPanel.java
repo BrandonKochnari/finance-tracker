@@ -9,9 +9,9 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
-import interface_adapter.GraphState;
-import interface_adapter.GraphViewModel;
-import interface_adapter.GraphController;
+import interface_adapter.graph.GraphController;
+import interface_adapter.graph.GraphState;
+import interface_adapter.graph.GraphViewModel;
 
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
@@ -157,19 +157,27 @@ public class GraphPanel extends JPanel implements ActionListener, PropertyChange
         barDataset.clear();
         pieDataset.clear();
 
-        // update bar dataset
-        List<Integer> x = state.getX();
-        List<Double> y = state.getY();
-        int length = x.size() > y.size() ? y.size() : x.size();
-        for (int i = 0; i < length; i++) {
-            barDataset.addValue(y.get(i), state.getSelectedType(), x.get(i));
+        // update bar dataset (use bar map)
+        Map<Integer, Float> bar = state.getBar();
+        if (bar != null) {
+            for (Map.Entry<Integer, Float> entry : bar.entrySet()) {
+                Integer colKey = entry.getKey();
+                Float val = entry.getValue();
+                if (colKey != null && val != null) {
+                    barDataset.addValue(val, state.getSelectedType(), colKey);
+                }
+            }
         }
 
         // update pie dataset
         Map<String, Double> data = state.getPie();
         // add each category to pie chart
-        for (Map.Entry<String, Double> entry : data.entrySet()) {
-            pieDataset.setValue(entry.getKey(), entry.getValue());
+        if (data != null) {
+            for (Map.Entry<String, Double> entry : data.entrySet()) {
+                if (entry.getKey() != null && entry.getValue() != null) {
+                    pieDataset.setValue(entry.getKey(), entry.getValue());
+                }
+            }
         }
     }
 }

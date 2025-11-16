@@ -1,7 +1,8 @@
-package interface_adapter;
+package interface_adapter.graph;
 
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 
 /**
  * the state for the graph view model
@@ -9,8 +10,7 @@ import java.util.Map;
 public class GraphState {
     private String selectedRange; // "Day" / "Month" / "Year"
     private String selectedType; // "Expense" / "Income"
-    private List<Long> x; // indices or epoch millis
-    private List<Double> y; // y values for the line/bar chart
+    private Map<Integer, Float> bar; // bar data <Date, Amount>
     private Map<String, Double> pie; // category -> value
 
     public String getSelectedRange() {
@@ -29,20 +29,24 @@ public class GraphState {
         this.selectedType = selectedType;
     }
 
-    public List<Long> getX() {
-        return x;
+    public List<Integer> getX() {
+        if (bar == null)
+            return null;
+        return new ArrayList<>(bar.keySet());
     }
 
-    public void setX(List<Long> x) {
-        this.x = x;
+    public List<Float> getY() {
+        if (bar == null)
+            return null;
+        return new ArrayList<>(bar.values());
     }
 
-    public List<Double> getY() {
-        return y;
+    public Map<Integer, Float> getBar() {
+        return bar;
     }
 
-    public void setY(List<Double> y) {
-        this.y = y;
+    public void setBar(Map<Integer, Float> bar) {
+        this.bar = bar;
     }
 
     public Map<String, Double> getPie() {
@@ -52,5 +56,4 @@ public class GraphState {
     public void setPie(Map<String, Double> pie) {
         this.pie = pie;
     }
-}
 }

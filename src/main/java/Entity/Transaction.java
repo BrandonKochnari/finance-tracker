@@ -1,5 +1,6 @@
-import java.util.Date;
-import java.util.List;
+package Entity;
+
+import java.util.Date
 
 /*
  * Entity class representing a financial transaction.
