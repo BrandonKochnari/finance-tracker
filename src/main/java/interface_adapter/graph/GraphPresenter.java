@@ -24,8 +24,8 @@ public class GraphPresenter implements GraphOutputBoundary {
         if (data.getPie() != null)
             graphState.setPie(data.getPie());
         gvm.firePropertyChange();
-        
-        //TODO: implement ALERT logic
+
+        // TODO: implement ALERT logic
     }
 
     @Override

@@ -7,7 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
-import Entity.Transaction;
+import entity.Transaction;
 import use_case.graph.GraphDataAccessInterface;
 
 public class GraphInteractor implements GraphInputBoundary {
@@ -96,5 +96,14 @@ public class GraphInteractor implements GraphInputBoundary {
                 bar.put(year, bar.get(year) + transaction.getAmount());
             }
         }
+
+        /* package into output data and prepare graph */
+        GraphOutputData outputData = new GraphOutputData(
+                selectedRange,
+                selectedType,
+                bar,
+                pie,
+                alerts);
+        graphPresenter.prepareGraph(outputData);
     }
 }

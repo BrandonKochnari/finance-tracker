@@ -11,7 +11,7 @@ public class GraphState {
     private String selectedRange; // "Day" / "Month" / "Year"
     private String selectedType; // "Expense" / "Income"
     private Map<Integer, Float> bar; // bar data <Date, Amount>
-    private Map<String, Double> pie; // category -> value
+    private Map<String, Float> pie; // category -> value
 
     public String getSelectedRange() {
         return selectedRange;
@@ -49,11 +49,11 @@ public class GraphState {
         this.bar = bar;
     }
 
-    public Map<String, Double> getPie() {
+    public Map<String, Float> getPie() {
         return pie;
     }
 
-    public void setPie(Map<String, Double> pie) {
+    public void setPie(Map<String, Float> pie) {
         this.pie = pie;
     }
 }

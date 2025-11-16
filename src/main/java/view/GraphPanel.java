@@ -170,10 +170,10 @@ public class GraphPanel extends JPanel implements ActionListener, PropertyChange
         }
 
         // update pie dataset
-        Map<String, Double> data = state.getPie();
+        Map<String, Float> data = state.getPie();
         // add each category to pie chart
         if (data != null) {
-            for (Map.Entry<String, Double> entry : data.entrySet()) {
+            for (Map.Entry<String, Float> entry : data.entrySet()) {
                 if (entry.getKey() != null && entry.getValue() != null) {
                     pieDataset.setValue(entry.getKey(), entry.getValue());
                 }
