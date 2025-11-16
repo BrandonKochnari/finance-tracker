@@ -1,4 +1,7 @@
-import java.util.Date
+package Entity;
+
+import java.util.Date;
+import java.util.List;
 
 /*
  * Entity class representing a financial transaction.
@@ -9,7 +12,7 @@ public class Transaction {
     private List<Label> labels;
     private String note;
     private Date date;
-    private String type;
+    private String type; // either "income" or "expense", not case sensitive
 
     /*
      * Constructor for Transaction class.
