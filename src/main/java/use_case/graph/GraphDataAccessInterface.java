@@ -1,16 +1,17 @@
 package use_case.graph;
 
-import java.util.HashMap;
+import java.util.List;
+
+import Entity.Transaction;
 
 public interface GraphDataAccessInterface {
 
     /**
      * get all past entries
      * 
-     * @return all past entries in a HASHMAP object -> {date:{type: String, amount:
-     *         float, tags: {}, note: String}}
+     * @return all past entries in an array
      */
-    public HashMap getAllEntries();
+    public List<Transaction> getAllEntries();
 
     /**
      * save lineGraphRange data for next use
@@ -39,5 +40,19 @@ public interface GraphDataAccessInterface {
      * @return the pie graph range data in database, null if file not found
      */
     public String getType();
+
+    /**
+     * Get only expense transactions from the data source.
+     *
+     * @return list of expense transactions
+     */
+    public List<Transaction> getExpenses();
+
+    /**
+     * Get only income transactions from the data source.
+     *
+     * @return list of income transactions
+     */
+    public List<Transaction> getIncomes();
 
 }

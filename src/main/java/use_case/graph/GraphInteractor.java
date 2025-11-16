@@ -27,13 +27,14 @@ public class GraphInteractor implements GraphInputBoundary {
         Map<String, Float> pie = new HashMap<>();
         List<String> alerts = new ArrayList<>();
 
-        List<Transaction> transactions = dataAccessObject.getAllEntries();
-
         // initalize to Day on first load
         if (selectedRange == null)
             selectedRange = "Day";
         if (selectedType == null)
             selectedType = "Expense";
+
+        List<Transaction> transactions = selectedType == "Expense" ? dataAccessObject.getExpenses()
+                : dataAccessObject.getIncomes();
 
         Date now = new Date();
         Calendar nowCal = Calendar.getInstance();
@@ -69,9 +70,6 @@ public class GraphInteractor implements GraphInputBoundary {
         }
 
         for (Transaction transaction : transactions) {
-            // skip transaction not of this type
-            if (transaction.getType() != selectedType)
-                return;
             Date t = transaction.getDate();
             Calendar c = Calendar.getInstance();
             c.setTime(t);
