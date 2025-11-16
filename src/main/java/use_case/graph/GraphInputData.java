@@ -4,25 +4,25 @@ package use_case.graph;
  * The input data for the graph use case
  */
 public class GraphInputData {
-    private final String lineGraphRange;
-    private final String pieGraphRange;
+    private final String range;
+    private final String transactionType;
 
-    public GraphInputData(String lineGraphRange, String pieGraphRange) {
-        this.lineGraphRange = lineGraphRange;
-        this.pieGraphRange = pieGraphRange;
+    public GraphInputData(String graphRange, String transactionType) {
+        this.range = graphRange;
+        this.transactionType = transactionType;
     }
 
     /*
-     * getter for lineGraphRange
+     * getter for range
      */
-    public String getLineRange() {
-        return this.lineGraphRange;
+    public String getRange() {
+        return this.range;
     }
 
     /*
-     * getter for pieGraphRange
+     * getter for transaction type
      */
-    public String getPieRange() {
-        return this.pieGraphRange;
+    public String getTransactionType() {
+        return this.transactionType;
     }
 }

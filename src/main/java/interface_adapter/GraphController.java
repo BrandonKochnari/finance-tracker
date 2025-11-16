@@ -12,10 +12,10 @@ public class GraphController {
     /*
      * Executes the graph use case
      */
-    public void execute(String lineGraphRange, String pieGraphRange){
+    public void execute(String range, String transactionType){
         final GraphInputData graphInputData = new GraphInputData(
-            lineGraphRange,
-            pieGraphRange
+            range,
+            transactionType
         );
 
         this.graphUseCaseInteractor.execute(graphInputData);

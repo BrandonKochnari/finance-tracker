@@ -1,62 +1,175 @@
 package view;
 
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+
+import interface_adapter.GraphState;
+import interface_adapter.GraphViewModel;
+import interface_adapter.GraphController;
+
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DefaultPieDataset;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Map;
+import java.util.List;
 
-public class GraphPanel {
-    private JFrame graphFrame;
-    private JPanel lineGraphContainer;
-    private JPanel pieGraphContainer;
-    private JButton[] rangeSelectorButtons;
-    private JButton[] typeSelectorButtons;
+public class GraphPanel extends JPanel implements ActionListener, PropertyChangeListener {
+    private ChartPanel leftGraphContainer;
+    private JPanel rightGraphContainer;
 
-    public GraphPanel() {
-        JFrame graphFrame = new JFrame("Trend Graph");
-        graphFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        graphFrame.setSize(800, 600);
-        graphFrame.setLocationRelativeTo(null);
-        graphFrame.getContentPane().setLayout(new GridLayout(1, 2));
-        this.graphFrame = graphFrame;
+    private GraphViewModel gvm;
+    private GraphController gc = null;
 
-        JPanel lineGraphContainer = new JPanel();
-        JPanel pieGraphContainer = new JPanel();
-        lineGraphContainer.setLayout(new BoxLayout(lineGraphContainer, BoxLayout.Y_AXIS));
-        pieGraphContainer.setLayout(new BoxLayout(pieGraphContainer, BoxLayout.Y_AXIS));
-        this.lineGraphContainer = lineGraphContainer;
-        this.pieGraphContainer = pieGraphContainer;
+    private DefaultPieDataset<String> pieDataset;
+    private DefaultCategoryDataset barDataset;
 
-        graphFrame.add(lineGraphContainer);
-        graphFrame.add(pieGraphContainer);
+    public GraphPanel(GraphViewModel gvm) {
+        // Main panel layout: split into two halves
+        setLayout(new GridLayout(1, 2));
+        this.gvm = gvm;
 
-        /* line graph container */
+        JFreeChart barChart = createBarChart();
+        XYPlot plot = barChart.getXYPlot();
+        NumberAxis domainAxis = (NumberAxis) plot.getDomainAxis();
+        domainAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+        leftGraphContainer = new ChartPanel(barChart);
+        add(leftGraphContainer);
+
+        // range selector buttons
         JPanel rangeSelectorContainer = new JPanel();
         rangeSelectorContainer.setLayout(new BoxLayout(rangeSelectorContainer, BoxLayout.X_AXIS));
         JButton dayButton = new JButton("Day");
         JButton monthButton = new JButton("Month");
         JButton yearButton = new JButton("Year");
-        // TODO: add actionlistner
         rangeSelectorContainer.add(dayButton);
         rangeSelectorContainer.add(monthButton);
         rangeSelectorContainer.add(yearButton);
-        lineGraphContainer.add(rangeSelectorContainer);
-        lineGraphContainer.setBackground(Color.CYAN);
+        leftGraphContainer.add(rangeSelectorContainer);
 
-        this.rangeSelectorButtons = new JButton[]{dayButton, monthButton, yearButton};
+        /* add listeners for range buttons */
+        JButton[] rangeButtons = { dayButton, monthButton, yearButton };
+
+        for (JButton button : rangeButtons) {
+            final JButton b = button;
+            button.addActionListener(
+                    new ActionListener() {
+                        public void actionPerformed(ActionEvent evt) {
+                            if (evt.getSource().equals(b)) {
+                                final GraphState currentState = gvm.getState();
+                                gc.execute(
+                                        b.getText(),
+                                        currentState.getSelectedType());
+                            }
+                        }
+                    });
+        }
 
         /* pie graph container */
+        JFreeChart pieChart = createPieChart();
+        rightGraphContainer = new ChartPanel(pieChart);
+        add(rightGraphContainer);
+
+        // type selector buttons
         JPanel typeSelectorContainer = new JPanel();
         typeSelectorContainer.setLayout(new BoxLayout(typeSelectorContainer, BoxLayout.X_AXIS));
         JButton incomeButton = new JButton("Income");
         JButton expenseButton = new JButton("Expense");
-        // TODO: add actionlistener
         typeSelectorContainer.add(incomeButton);
         typeSelectorContainer.add(expenseButton);
-        pieGraphContainer.add(typeSelectorContainer);
+        rightGraphContainer.add(typeSelectorContainer);
+        /* add listeners for type buttons */
+        JButton[] typeButtons = { incomeButton, expenseButton };
 
-        this.typeSelectorButtons = new JButton[]{incomeButton, expenseButton};
+        for (JButton button : typeButtons) {
+            final JButton b = button;
+            button.addActionListener(
+                    new ActionListener() {
+                        public void actionPerformed(ActionEvent evt) {
+                            if (evt.getSource().equals(b)) {
+                                final GraphState currentState = gvm.getState();
+                                gc.execute(
+                                        currentState.getSelectedRange(),
+                                        b.getName());
+                            }
+                        }
+                    });
+        }
+    }
 
-        /* show frame */
-        graphFrame.setVisible(true);
+    private JFreeChart createPieChart() {
+
+        pieDataset = new DefaultPieDataset<>();
+
+        JFreeChart pieChart = ChartFactory.createPieChart(
+                "Breakdown",
+                pieDataset,
+                true,
+                true,
+                false);
+
+        return pieChart;
+    }
+
+    private JFreeChart createBarChart() {
+        barDataset = new DefaultCategoryDataset();
+        JFreeChart barChart = ChartFactory.createBarChart(
+                "",
+                "",
+                "Amount",
+                barDataset);
+
+        return barChart;
+    }
+
+    public void setGraphController(GraphController gc) {
+        this.gc = gc;
+    }
+
+    /**
+     * react to a bottom click
+     * 
+     * @param evt event
+     */
+    public void actionPerformed(ActionEvent evt) {
+        System.out.println("clicked " + evt.getActionCommand());
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        final GraphState state = (GraphState) evt.getNewValue();
+        updateGraph(state);
+    }
+
+    private void updateGraph(GraphState state) {
+        // clear previous values
+        barDataset.clear();
+        pieDataset.clear();
+
+        // update bar dataset
+        List<Integer> x = state.getX();
+        List<Double> y = state.getY();
+        int length = x.size() > y.size() ? y.size() : x.size();
+        for (int i = 0; i < length; i++) {
+            barDataset.addValue(y.get(i), state.getSelectedType(), x.get(i));
+        }
+
+        // update pie dataset
+        Map<String, Double> data = state.getPie();
+        // add each category to pie chart
+        for (Map.Entry<String, Double> entry : data.entrySet()) {
+            pieDataset.setValue(entry.getKey(), entry.getValue());
+        }
     }
 }

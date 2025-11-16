@@ -17,27 +17,27 @@ public interface GraphDataAccessInterface {
      * 
      * @param lineGraphRange the range data for line graph
      */
-    public void saveLineRange(String lineGraphRange);
+    public void saveGraphRange(String lineGraphRange);
 
     /**
-     * save pieGraphRange data for next use
+     * save the type of entry to graph
      * 
-     * @param pieGraphRange the range data for pie graph
+     * @param type the type of entry
      */
-    public void savePieRange(String pieGraphRange);
+    public void saveGraphType(String type);
 
     /**
-     * get lineGraphRange data from database
+     * get range data from database
      * 
-     * @return the line graph range data in database, null if file not found
+     * @return the graph range data in database, null if file not found
      */
-    public String getLineRange();
+    public String getRange();
 
     /**
-     * get pieGraphRange data from database
+     * get type data from database
      * 
      * @return the pie graph range data in database, null if file not found
      */
-    public String getPieRange();
+    public String getType();
 
 }
