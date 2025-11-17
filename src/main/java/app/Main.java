@@ -4,9 +4,12 @@ package app;
 import view.GraphPanel;
 import interface_adapter.graph.*;
 import use_case.graph.*;
-import Entity.Transaction;
-import Entity.Label;
+
 import javax.swing.*;
+
+import Entity.Label;
+import Entity.Transaction;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.util.List;

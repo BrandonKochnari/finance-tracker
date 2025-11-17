@@ -2,13 +2,14 @@ package use_case.graph;
 
 import java.util.List;
 import java.util.Map;
+
+import Entity.Label;
+import Entity.Transaction;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-
-import Entity.Transaction;
-import Entity.Label;
 
 public class GraphInteractor implements GraphInputBoundary {
     private final GraphDataAccessInterface dataAccessObject;
