@@ -50,7 +50,7 @@ public class GraphInteractor implements GraphInputBoundary {
                 bar.put(d, 0f);
             }
         } else if (selectedRange.equalsIgnoreCase("Month")) {
-            for (int m = 0; m < 12; m++) {
+            for (int m = 1; m <= 12; m++) {
                 bar.put(m, 0f);
             }
         } else { // Year
@@ -88,7 +88,8 @@ public class GraphInteractor implements GraphInputBoundary {
 
             else if (selectedRange.equals("Month")) {
                 if (year == nowYear) {
-                    addToBar(bar, month, transaction);
+                    // month is zero index in Calendar
+                    addToBar(bar, month + 1, transaction);
                     addToPie(pie, labels, transaction);
                 }
             }
