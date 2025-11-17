@@ -1,4 +1,6 @@
-package Olivier;
+package Olivier.use_case;
+
+import Olivier.OptimizeDataAccess;
 
 public class OptimizeInteractor implements OptimizeInputBoundary{
     private final OptimizeDataAccess apiInterface;

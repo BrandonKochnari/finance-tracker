@@ -1,4 +1,4 @@
-package Olivier;
+package Olivier.use_case;
 
 public class OptimizeOutputData {
     private final String message;

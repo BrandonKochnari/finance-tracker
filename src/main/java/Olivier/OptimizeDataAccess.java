@@ -23,7 +23,9 @@ public class OptimizeDataAccess {
         System.out.println(test.generateText(p));
     }
 
-    public String generateText(String prompt){
+    public String generateText(String expenses){
+        String prompt = "Give advice on how to optimize this spending. Respond only with the advice. \n"
+                + expenses;
 
         JSONObject textObj = new JSONObject();
         textObj.put("text", prompt);

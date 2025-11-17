@@ -1,4 +1,4 @@
-package Olivier;
+package Olivier.use_case;
 
 /**
  * Input boundary for the optimize expenses use case.
