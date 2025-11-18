@@ -83,6 +83,7 @@ public class Transaction {
                 ", amount=" + amount +
                 ", type='" + type + '\'' +
                 ", note='" + note + '\'' +
+                ", labels='" + labels + '\'' +
                 ", date=" + date +
                 '}';
     }

@@ -1,4 +1,4 @@
-package use_case.AddTransaction;
+package use_case.addtransaction;
 
 public class AddTransactionResponseModel {
     private final long transactionId;

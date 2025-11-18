@@ -1,4 +1,4 @@
-package use_case.AddTransaction;
+package use_case.addtransaction;
 
 import Entity.Transaction;
 import java.util.List;

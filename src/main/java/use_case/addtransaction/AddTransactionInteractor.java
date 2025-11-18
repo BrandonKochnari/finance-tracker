@@ -1,4 +1,4 @@
-package use_case.AddTransaction;
+package use_case.addtransaction;
 import Entity.Transaction;
 import Entity.Label;
 import java.util.*;
@@ -17,11 +17,10 @@ public class AddTransactionInteractor implements AddTransactionInputBoundary {
 
     @Override
     public void execute(AddTransactionRequestModel requestModel) {
-        System.out.println("Interactor reached");
-        float amount = requestModel.get_amount();
-        String type = requestModel.get_type();
-        String note = requestModel.get_note();
-        Date date = requestModel.get_date();
+        float amount = requestModel.getAmount();
+        String type = requestModel.getType();
+        String note = requestModel.getNote();
+        Date date = requestModel.getDate();
 
         if (amount < 0) {
             presenter.prepareFailureView("Amount must be greater than zero\n");

@@ -9,7 +9,7 @@ public class AddTransactionViewModel {
     }
 
     public void setMessage(String message) {
-        System.out.println("ViewModel updated: " + message);
+
         this.message = message;
 
         if (onUpdate != null) {

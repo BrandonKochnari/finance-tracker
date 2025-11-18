@@ -1,6 +1,6 @@
 package interface_adapter.AddTransaction;
 
-import use_case.AddTransaction.*;
+import use_case.addtransaction.*;
 
 public class AddTransactionPresenter implements AddTransactionOutputBoundary{
     private final AddTransactionViewModel viewModel;
@@ -11,7 +11,6 @@ public class AddTransactionPresenter implements AddTransactionOutputBoundary{
 
     @Override
     public void prepareSuccessView(AddTransactionResponseModel responseModel) {
-        System.out.println("Presenter reached");
         String message = String.format(
                 "Your transaction has been saved!\n" +
                         "Amount: %.1f\n" +

@@ -1,11 +1,11 @@
-package use_case.AddTransaction;
+package use_case.addtransaction;
 
 import java.util.Date;
 
 public class AddTransactionRequestModel {
-    private float amount;
-    private String note;
-    private String type;
+    private final float amount;
+    private final String note;
+    private final String type;
     private Date date;
 
     public AddTransactionRequestModel(float amount, String note, String type, Date date) {
@@ -13,18 +13,18 @@ public class AddTransactionRequestModel {
         this.note = note;
         this.type = type;
     }
-    public float get_amount(){
+    public float getAmount(){
         return amount;
     }
-    public String get_type(){
+    public String getType(){
         return type;
     }
 
-    public String get_note(){
+    public String getNote(){
         return note;
     }
 
-    public Date get_date(){
+    public Date getDate(){
         return date;
     }
 }

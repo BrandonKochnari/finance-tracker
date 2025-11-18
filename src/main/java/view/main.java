@@ -1,8 +1,7 @@
 package view;
 
 import interface_adapter.AddTransaction.*;
-import use_case.AddTransaction.*;
-import view.AddTransactionView;
+import use_case.addtransaction.*;
 import data_access.InMemoryTransactionDataAccessObject;
 
 
@@ -24,8 +23,8 @@ public class main {
         view.setController(controller);
 
 
-        //controller.addTransaction(100, "Income", "Test1");
-        //controller.addTransaction(200, "Expense", "Test2");
+        controller.addTransaction(100, "Income", "Test1");
+        controller.addTransaction(200, "Expense", "Test2");
 
         System.out.println(dataAccess.getTransactions());
     }

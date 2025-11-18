@@ -14,9 +14,9 @@ public class AddTransactionView extends JFrame {
     public AddTransactionView(AddTransactionViewModel viewModel) {
         this.viewModel = viewModel;
 
-        setTitle("Finance Tracker - Add Transaction");
+        setTitle("Add Transaction");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400, 300);
+        setSize(800, 500);
 
         setLayout(new BorderLayout());
 
@@ -43,7 +43,6 @@ public class AddTransactionView extends JFrame {
         add(new JScrollPane(outputArea), BorderLayout.CENTER);
 
         viewModel.setOnUpdate(() -> {
-            System.out.println("View notified!");
             outputArea.append(viewModel.getMessage());
         });
 

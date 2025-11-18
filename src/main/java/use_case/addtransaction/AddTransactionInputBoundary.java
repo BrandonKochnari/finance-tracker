@@ -1,6 +1,4 @@
-package use_case.AddTransaction;
-
-import Entity.Transaction;
+package use_case.addtransaction;
 
 public interface AddTransactionInputBoundary {
     void execute(AddTransactionRequestModel requestModel);

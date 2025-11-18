@@ -1,6 +1,6 @@
 package interface_adapter.AddTransaction;
 
-import use_case.AddTransaction.*;
+import use_case.addtransaction.*;
 
 import java.util.Date;
 
