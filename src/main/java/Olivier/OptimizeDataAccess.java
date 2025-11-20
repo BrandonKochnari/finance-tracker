@@ -1,5 +1,7 @@
 package Olivier;
 
+import Olivier.use_case.OptimizeDataAccessInterface;
+
 import okhttp3.*;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -7,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class OptimizeDataAccess {
+public class OptimizeDataAccess implements OptimizeDataAccessInterface {
     private static final String API_KEY = System.getenv("GEMINI_API_KEY");
     private static final String MODEL = "gemini-2.5-flash";
     private static final OkHttpClient client = new OkHttpClient.Builder()

@@ -1,12 +1,11 @@
 package Olivier.use_case;
 
-import Olivier.OptimizeDataAccess;
 
 public class OptimizeInteractor implements OptimizeInputBoundary{
-    private final OptimizeDataAccess apiInterface;
+    private final OptimizeDataAccessInterface apiInterface;
     private final OptimizeOutputBoundary outputBoundary;
 
-    public OptimizeInteractor(OptimizeDataAccess apiInterface,
+    public OptimizeInteractor(OptimizeDataAccessInterface apiInterface,
                                 OptimizeOutputBoundary outputBoundary) {
         this.apiInterface = apiInterface;
         this.outputBoundary = outputBoundary;

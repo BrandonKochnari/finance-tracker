@@ -15,7 +15,7 @@ public class Starter {
         optimizeView.setController(controller);
 
         JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.add(optimizeView);
         frame.pack();
         frame.setVisible(true);
