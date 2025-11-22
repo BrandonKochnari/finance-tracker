@@ -12,7 +12,7 @@ public class Transaction {
     private List<Label> labels;
     private String note;
     private Date date;
-    private String type; // either "income" or "expense", not case sensitive
+    private String type; // either "income" or "expense", not case-sensitive
 
     /*
      * Constructor for Transaction class.
@@ -23,7 +23,7 @@ public class Transaction {
         this.amount = amount;
         this.labels = labels;
         this.note = note;
-        this.date = new Date();
+        this.date = date;
         this.type = type;
     }
 
