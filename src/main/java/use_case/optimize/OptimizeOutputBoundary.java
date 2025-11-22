@@ -1,4 +1,4 @@
-package optimize.use_case;
+package use_case.optimize;
 
 /**
  * The output boundary for the optimize expenses use case.

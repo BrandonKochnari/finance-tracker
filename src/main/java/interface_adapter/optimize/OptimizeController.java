@@ -1,7 +1,7 @@
-package optimize.interface_adapter;
+package interface_adapter.optimize;
 
-import optimize.use_case.OptimizeInputData;
-import optimize.use_case.OptimizeInputBoundary;
+import use_case.optimize.OptimizeInputData;
+import use_case.optimize.OptimizeInputBoundary;
 
 public class OptimizeController {
     private final OptimizeInputBoundary optimiseInteractor;

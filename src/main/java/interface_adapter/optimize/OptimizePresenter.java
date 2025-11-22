@@ -1,7 +1,7 @@
-package optimize.interface_adapter;
+package interface_adapter.optimize;
 
-import optimize.use_case.OptimizeOutputBoundary;
-import optimize.use_case.OptimizeOutputData;
+import use_case.optimize.OptimizeOutputBoundary;
+import use_case.optimize.OptimizeOutputData;
 
 public class OptimizePresenter implements OptimizeOutputBoundary {
     private final OptimizeViewModel viewModel;

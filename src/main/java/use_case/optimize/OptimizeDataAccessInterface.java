@@ -1,4 +1,4 @@
-package optimize.use_case;
+package use_case.optimize;
 
 /**
  * DAO interface for the optimize use case

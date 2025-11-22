@@ -1,5 +1,7 @@
 package optimize.interface_adapter;
 
+import interface_adapter.optimize.OptimizeState;
+import interface_adapter.optimize.OptimizeViewModel;
 import org.junit.jupiter.api.Test;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

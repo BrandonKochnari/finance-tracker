@@ -1,5 +1,6 @@
 package optimize.interface_adapter;
 
+import interface_adapter.optimize.OptimizeState;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,4 +1,4 @@
-package optimize.interface_adapter;
+package interface_adapter.optimize;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;

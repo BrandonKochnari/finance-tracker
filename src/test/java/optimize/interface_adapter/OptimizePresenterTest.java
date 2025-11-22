@@ -1,6 +1,9 @@
 package optimize.interface_adapter;
 
-import optimize.use_case.OptimizeOutputData;
+import interface_adapter.optimize.OptimizePresenter;
+import interface_adapter.optimize.OptimizeState;
+import interface_adapter.optimize.OptimizeViewModel;
+import use_case.optimize.OptimizeOutputData;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

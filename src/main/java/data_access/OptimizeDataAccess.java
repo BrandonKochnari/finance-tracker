@@ -1,6 +1,6 @@
-package optimize;
+package data_access;
 
-import optimize.use_case.OptimizeDataAccessInterface;
+import use_case.optimize.OptimizeDataAccessInterface;
 
 import okhttp3.*;
 import java.io.IOException;

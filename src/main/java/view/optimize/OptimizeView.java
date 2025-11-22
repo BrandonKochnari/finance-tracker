@@ -1,8 +1,8 @@
-package optimize;
+package view.optimize;
 
-import optimize.interface_adapter.OptimizeState;
-import optimize.interface_adapter.OptimizeController;
-import optimize.interface_adapter.OptimizeViewModel;
+import interface_adapter.optimize.OptimizeState;
+import interface_adapter.optimize.OptimizeController;
+import interface_adapter.optimize.OptimizeViewModel;
 
 import javax.swing.*;
 import java.awt.*;
