@@ -1,11 +1,12 @@
-package Qi;
+package view.label;
+
+import entity.Label;
+import interface_adapter.label.LabelController;
 
 import javax.swing.*;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class LabelView extends JFrame {
 

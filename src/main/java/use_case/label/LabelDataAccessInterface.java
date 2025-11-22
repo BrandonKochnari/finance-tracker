@@ -1,4 +1,6 @@
-package Qi;
+package use_case.label;
+
+import entity.Label;
 
 public interface LabelDataAccessInterface {
     void updateLabel(Label label);

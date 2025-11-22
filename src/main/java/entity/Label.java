@@ -19,7 +19,7 @@ public class Label {
                  int userid, double amount, String description) {
         this.labelId = labelId;
         this.labelName = labelName;
-        this.labelDate = labelDate;
+        this.labelDate = new Date();
         this.color = color;
         this.description = description;
         this.userid = userid;
