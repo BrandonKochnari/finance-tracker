@@ -1,6 +1,6 @@
 package use_case.add_transaction;
 
-import Entity.Transaction;
+import entity.Transaction;
 import java.util.List;
 
 public interface TransactionDataAccessInterface {
