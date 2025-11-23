@@ -43,7 +43,4 @@ public class AddTransactionInteractor implements AddTransactionInputBoundary {
 
         presenter.prepareSuccessView(responseModel);
     }
-    //public List<Transaction> getTransactions() {
-        //return transactions;
-    //}
 }
