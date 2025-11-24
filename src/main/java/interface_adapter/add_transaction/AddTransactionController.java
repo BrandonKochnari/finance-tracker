@@ -1,6 +1,7 @@
 package interface_adapter.add_transaction;
 
-import use_case.add_transaction.*;
+import use_case.add_transaction.AddTransactionInputBoundary;
+import use_case.add_transaction.AddTransactionRequestModel;
 
 import java.util.Date;
 
