@@ -22,5 +22,7 @@
   {"id":4,"amount":3566.0,"type":"Expense","note":"bought a car","date":"1763941237152"},
   {"id":1,"amount":100.0,"type":"Income","note":"Test1","date":"1763960389607"},
   {"id":2,"amount":200.0,"type":"Expense","note":"Test2","date":"1763960389713"},
-  {"id":3,"amount":543221.0,"type":"Income","note":"new","date":"1763960400406"}
+  {"id":3,"amount":543221.0,"type":"Income","note":"new","date":"1763960400406"},
+  {"id":1,"amount":100.0,"type":"Income","note":"Test1","date":"1763963339659"},
+  {"id":2,"amount":200.0,"type":"Expense","note":"Test2","date":"1763963339794"}
 ]

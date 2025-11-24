@@ -12,7 +12,7 @@ public class Transaction {
     private List<Label> labels;
     private String note;
     private Date date;
-    private String type; // either "income" or "expense", not case sensitive
+    private String type; // either "income" or "expense", not case-sensitive
 
     /*
      * Constructor for Transaction class.
@@ -81,10 +81,10 @@ public class Transaction {
         return "Transaction{" +
                 "id=" + id +
                 ", amount=" + amount +
-                ", labels='" + labels + '\'' +
-                ", note='" + note + '\'' +
-                ", date=" + date +
                 ", type='" + type + '\'' +
+                ", note='" + note + '\'' +
+                ", labels='" + labels + '\'' +
+                ", date=" + date +
                 '}';
     }
 }

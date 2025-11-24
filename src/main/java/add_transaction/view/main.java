@@ -1,6 +1,6 @@
 package add_transaction.view;
 
-import add_transaction.data_access.JsonTransactionDataAccessObject;
+import data_access.JsonTransactionDataAccessObject;
 import add_transaction.interface_adapter.AddTransaction.AddTransactionController;
 import add_transaction.interface_adapter.AddTransaction.AddTransactionPresenter;
 import add_transaction.interface_adapter.AddTransaction.AddTransactionViewModel;
