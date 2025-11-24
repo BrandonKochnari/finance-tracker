@@ -26,8 +26,8 @@ public class SetBudgetView extends JPanel {
     private final JTextField totalSpentField = new JTextField(10);
     private final JLabel messageLabel = new JLabel(" ");
 
-    private final JButton saveBtn = new JButton("Save");
-    private final JButton resetBtn = new JButton("Reset");
+    private final JButton saveBtn = new JButton("SAVE");
+    private final JButton resetBtn = new JButton("RESET");
 
     public SetBudgetView(BudgetController controller,
                          BudgetViewModel viewModel,
@@ -54,7 +54,7 @@ public class SetBudgetView extends JPanel {
         setLayout(new BorderLayout());
 
         // Top Back button
-        JButton backButton = new JButton("← Back");
+        JButton backButton = new JButton("← BACK");
         backButton.addActionListener(e -> {
             limitField.setText("");
             totalSpentField.setText("");

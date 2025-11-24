@@ -14,7 +14,7 @@ import Brandon.view.YearOverviewView;
 import javax.swing.*;
 import java.awt.*;
 
-public class BudgetApp {
+public class BudgetStarter {
 
     private static final String MAIN_MENU = "MAIN_MENU";
     private static final String ADD_BUDGET = "ADD_BUDGET";

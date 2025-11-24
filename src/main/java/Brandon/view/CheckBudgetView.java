@@ -74,7 +74,7 @@ public class CheckBudgetView extends JPanel {
         setLayout(new BorderLayout());
 
         // TOP: Back button
-        JButton backButton = new JButton("← Back");
+        JButton backButton = new JButton("← BACK");
         backButton.addActionListener(e -> {
             if (onBackToMenu != null) onBackToMenu.run();
         });
@@ -96,9 +96,9 @@ public class CheckBudgetView extends JPanel {
         monthPanel.add(nextButton);
 
         JPanel buttonPanel = new JPanel();
-        JButton addBudgetButton = new JButton("Add Budget");
+        JButton addBudgetButton = new JButton("ADD Budget");
         buttonPanel.add(addBudgetButton);
-        JButton resetBudgetButton = new JButton("Reset Budget");
+        JButton resetBudgetButton = new JButton("RESET Budget");
         buttonPanel.add(resetBudgetButton);
 
         // Message row, centered
@@ -452,7 +452,7 @@ public class CheckBudgetView extends JPanel {
     private void updateLastUpdatedLabel() {
         ZoneId zone = ZoneId.of("America/Toronto");
         ZonedDateTime now = ZonedDateTime.now(zone);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss z");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z");
         String formatted = now.format(formatter);
 
         lastUpdatedLabel.setText("Last updated: " + formatted);

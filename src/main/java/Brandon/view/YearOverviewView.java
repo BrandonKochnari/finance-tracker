@@ -14,7 +14,7 @@ public class YearOverviewView extends JPanel {
         setLayout(new BorderLayout());
 
         // TOP: Back button row
-        JButton backButton = new JButton("← Back");
+        JButton backButton = new JButton("← BACK");
         backButton.addActionListener(e -> {
             if (onBackToMenu != null) {
                 onBackToMenu.run();
