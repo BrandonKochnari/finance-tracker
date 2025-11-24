@@ -2,67 +2,39 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainView extends JFrame {
+    private static final int WIDTH = 800;
+    private static final int HEIGHT = 600;
 
     public MainView(MainInputData data) {
         super("Finance UI");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(800, 600);
+        setSize(WIDTH, HEIGHT);
         setLocationRelativeTo(null);
 
         setLayout(new BorderLayout());
 
-        // ------------------ SIDEBAR ------------------
-        JPanel navPanel = new JPanel();
-        navPanel.setLayout(new BoxLayout(navPanel, BoxLayout.Y_AXIS));
-        navPanel.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 20));
-
-        navPanel.add(Box.createVerticalGlue());
-        navPanel.setBackground(new Color(230, 230, 230));
-        navPanel.setOpaque(true);
-
-        String[] navItems = {"Search", "Budget", "Graph", "Optimize"};
-        addButtons(navPanel, navItems);
-
-        navPanel.add(Box.createVerticalGlue());
+        JPanel navPanel = createNavPanel();
 
         add(navPanel, BorderLayout.WEST);
 
-        // ------------------ CENTER ------------------
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         add(centerPanel, BorderLayout.CENTER);
 
-        // ------------------ SPENDING ------------------
-        JPanel summaryPanel = new JPanel(new GridLayout(2, 1));
-        summaryPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
-
-        float amount = Math.round((data.getMoney() - data.getSpent()) * 100) / 100f;
-        JLabel l1 = new JLabel("Remaining: $" + amount);
-        l1.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
-        summaryPanel.add(l1);
-
-        float spent = Math.round(data.getSpent() * 100) / 100f;
-        JLabel l2 = new JLabel("Spent: $" + spent);
-        l2.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
-        summaryPanel.add(l2);
-
-        l1.setHorizontalAlignment(SwingConstants.CENTER);
-        l2.setHorizontalAlignment(SwingConstants.CENTER);
-
-        l2.setBorder(BorderFactory.createEmptyBorder(0, 0, 40, 0));
+        JPanel summaryPanel = createSpendingPanel(data);
 
         centerPanel.add(summaryPanel);
 
-        // -------------- INCOMES/EXPENSES LIST --------------
-        JPanel listsPanel = new JPanel(new GridLayout(1, 2, 30, 0));
-        listsPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
-        listsPanel.add(makeListPanel("Expenses", data.getExpenses()));
-        listsPanel.add(makeListPanel("Income", data.getIncomes()));
+        JPanel listsPanel = createListPanel(data);
 
         centerPanel.add(listsPanel);
 
-        // ------------------ ADD INCOME/EXPENSE ------------------
+        JPanel bottomPanel = createButtonsPanel();
+
+        centerPanel.add(bottomPanel);
+    }
+
+    private static JPanel createButtonsPanel() {
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 15));
 
         //ToDo Call the add expense use case
@@ -81,10 +53,53 @@ public class MainView extends JFrame {
 
         bottomPanel.add(addExp);
         bottomPanel.add(addInc);
+        return bottomPanel;
+    }
 
-        centerPanel.add(bottomPanel);
+    private JPanel createListPanel(MainInputData data) {
+        JPanel listsPanel = new JPanel(new GridLayout(1, 2, 30, 0));
+        listsPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        setVisible(true);
+        listsPanel.add(makeListPanel("Expenses", data.getExpenses()));
+        listsPanel.add(makeListPanel("Income", data.getIncomes()));
+        return listsPanel;
+    }
+
+    private static JPanel createSpendingPanel(MainInputData data) {
+        JPanel summaryPanel = new JPanel(new GridLayout(2, 1));
+        summaryPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+
+        JLabel l1 = new JLabel("Remaining: $"
+                + String.format("%.2f", (data.getMoney() - data.getSpent())));
+        l1.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
+        summaryPanel.add(l1);
+
+        JLabel l2 = new JLabel("Spent: $"
+                + String.format("%.2f", data.getSpent()));
+        l2.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
+        summaryPanel.add(l2);
+
+        l1.setHorizontalAlignment(SwingConstants.CENTER);
+        l2.setHorizontalAlignment(SwingConstants.CENTER);
+
+        l2.setBorder(BorderFactory.createEmptyBorder(0, 0, 40, 0));
+        return summaryPanel;
+    }
+
+    private static JPanel createNavPanel() {
+        JPanel navPanel = new JPanel();
+        navPanel.setLayout(new BoxLayout(navPanel, BoxLayout.Y_AXIS));
+        navPanel.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 20));
+
+        navPanel.add(Box.createVerticalGlue());
+        navPanel.setBackground(new Color(230, 230, 230));
+        navPanel.setOpaque(true);
+
+        String[] navItems = {"Search", "Budget", "Graph", "Optimize"};
+        addButtons(navPanel, navItems);
+
+        navPanel.add(Box.createVerticalGlue());
+        return navPanel;
     }
 
     private static void addButtons(JPanel navPanel, String[] navItems) {
