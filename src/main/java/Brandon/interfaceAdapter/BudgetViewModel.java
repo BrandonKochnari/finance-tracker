@@ -1,6 +1,6 @@
 package Brandon.interfaceAdapter;
 
-public class SetBudgetViewModel {
+public class BudgetViewModel {
     private String month;
     private float limit;
     private float totalSpent;

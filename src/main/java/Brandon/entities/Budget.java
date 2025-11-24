@@ -5,6 +5,8 @@ public class Budget {
     private String month;
     private float limit;
     private float totalSpent;
+    private String notes;
+    private String lastUpdated;
 
     public Budget(String month) {
         this.month = month;
@@ -43,28 +45,34 @@ public class Budget {
         return limit - totalSpent;
     }
 
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
     public String getStatus() {
         float remaining = getRemaining();
         if (remaining < 0) {
             return "Over budget";
         } else if (remaining == 0) {
-            return "Exactly on budget";
+            return "Budget hit";
         } else {
             return "On track";
         }
     }
 
-    // You can still add: updateSpent(amount), compareToBudget(), etc. later.
+    public String getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(String lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
 }
 
-// fix $-1000
-// 1. Add budget: enter info, and cancel/save button at the bottom (save only clickable after month/budget input)
-// 2. Check budget: Create a UI with dropdown menu
-    // Left and right arrow for switching months
-    // If budget exists display it, if not state that and feature 'add budget' button (leads to 1st menu option screen)
-    // Add space for extra notes below budget (last updated date?)
-    // Previous budgets table at the bottom of page with required info (can select to jump to that month)
-// Each month's section should have date, budget value, total spent, remaining, success
 // 3. Full year's budget: see full year's worth of budget displaying each month as well as required info in a table
     // Left and right arrow for switching years
     // Filters: [ All months | Over budget | Under budget | No budget ]

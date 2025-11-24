@@ -16,13 +16,13 @@ public class MainMenuView extends JPanel {
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
         title.setFont(title.getFont().deriveFont(Font.BOLD, 24f));
 
-        JLabel subtitle = new JLabel("Choose an option:");
+        JLabel subtitle = new JLabel("Select an option:");
         subtitle.setAlignmentX(Component.CENTER_ALIGNMENT);
         subtitle.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
 
         JButton addBudgetButton = new JButton("Add / Edit Budget");
         JButton checkBudgetButton = new JButton("Check Budget");
-        JButton fullYearButton = new JButton("Full Year Budgets");
+        JButton fullYearButton = new JButton("Year Overview");
 
         addBudgetButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         checkBudgetButton.setAlignmentX(Component.CENTER_ALIGNMENT);

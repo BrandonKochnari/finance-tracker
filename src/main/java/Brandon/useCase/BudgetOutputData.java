@@ -1,6 +1,6 @@
 package Brandon.useCase;
 
-public class SetBudgetOutputData {
+public class BudgetOutputData {
     private final String month;
     private final float limit;
     private final float totalSpent;
@@ -8,7 +8,7 @@ public class SetBudgetOutputData {
     private final boolean success;
     private final String message;
 
-    public SetBudgetOutputData(String month, float limit, float totalSpent, float remaining, boolean success, String message) {
+    public BudgetOutputData(String month, float limit, float totalSpent, float remaining, boolean success, String message) {
         this.month = month;
         this.limit = limit;
         this.totalSpent = totalSpent;

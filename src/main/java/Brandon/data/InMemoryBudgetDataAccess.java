@@ -1,14 +1,15 @@
 package Brandon.data;
 
 import Brandon.entities.Budget;
-import Brandon.useCase.SetBudgetDataAccessInterface;
+import Brandon.useCase.BudgetDataAccessInterface;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class InMemorySetBudgetDataAccess implements SetBudgetDataAccessInterface {
+public class InMemoryBudgetDataAccess implements BudgetDataAccessInterface {
 
     private final Map<String, Budget> budgets = new HashMap<>();
+
 
     @Override
     public Budget getBudgetForMonth(String month) {
@@ -18,5 +19,10 @@ public class InMemorySetBudgetDataAccess implements SetBudgetDataAccessInterface
     @Override
     public void saveBudget(Budget budget) {
         budgets.put(budget.getMonth(), budget);
+    }
+
+    @Override
+    public void deleteBudget(String monthKey) {
+        budgets.remove(monthKey);
     }
 }

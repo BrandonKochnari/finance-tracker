@@ -1,18 +1,18 @@
 package Brandon.interfaceAdapter;
 
-import Brandon.useCase.SetBudgetOutputBoundary;
-import Brandon.useCase.SetBudgetOutputData;
+import Brandon.useCase.BudgetOutputBoundary;
+import Brandon.useCase.BudgetOutputData;
 
-public class SetBudgetPresenter implements SetBudgetOutputBoundary {
+public class BudgetPresenter implements BudgetOutputBoundary {
 
-    private final SetBudgetViewModel viewModel;
+    private final BudgetViewModel viewModel;
 
-    public SetBudgetPresenter(SetBudgetViewModel viewModel) {
+    public BudgetPresenter(BudgetViewModel viewModel) {
         this.viewModel = viewModel;
     }
 
     @Override
-    public void present(SetBudgetOutputData outputData) {
+    public void present(BudgetOutputData outputData) {
         viewModel.setMonth(outputData.getMonth());
         viewModel.setLimit(outputData.getLimit());
         viewModel.setTotalSpent(outputData.getTotalSpent());
