@@ -65,9 +65,3 @@ public class Budget {
         this.lastUpdated = lastUpdated;
     }
 }
-
-// Test cases
-// Extra code contribution other than use case (TODO in MainView file)
-// Review another pull request
-// Update presentation (UML, screenshots of use case)
-// UML
