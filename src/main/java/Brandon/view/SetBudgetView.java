@@ -18,7 +18,6 @@ public class SetBudgetView extends JPanel {
     private final JComboBox<String> monthCombo;
     private final JComboBox<Integer> yearCombo;
 
-    // NEW: Arrows for month switching
     private final JButton prevButton = new JButton("←");
     private final JButton nextButton = new JButton("→");
 
@@ -36,7 +35,6 @@ public class SetBudgetView extends JPanel {
         this.controller = controller;
         this.viewModel = viewModel;
 
-        // Month models
         String[] months = {
                 "January", "February", "March", "April", "May", "June",
                 "July", "August", "September", "October", "November", "December"
@@ -53,26 +51,20 @@ public class SetBudgetView extends JPanel {
 
         setLayout(new BorderLayout());
 
-        // Top Back button
+        // Back button
         JButton backButton = new JButton("← BACK");
-        backButton.addActionListener(e -> {
-            limitField.setText("");
-            totalSpentField.setText("");
-            messageLabel.setText(" ");
-            resetBtn.setEnabled(false);
-            saveBtn.setEnabled(false);
-            if (onBackToMenu != null) onBackToMenu.run();
-        });
+        backButton.addActionListener(e -> {clearForm(); if (onBackToMenu != null) onBackToMenu.run();});
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         topPanel.add(backButton);
         add(topPanel, BorderLayout.NORTH);
 
-        // Center content panel
+        // Main content
         JPanel content = new JPanel();
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
-        int panelWidth = 400, panelHeight = 60;
+        int panelWidth = 400;
+        int panelHeight = 60;
 
-        // Month + Year + arrows
+        // Month + year + arrows
         JPanel monthPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         monthPanel.setMaximumSize(new Dimension(panelWidth, panelHeight));
 
@@ -105,7 +97,6 @@ public class SetBudgetView extends JPanel {
         // Center message label
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Add everything
         content.add(Box.createVerticalGlue());
         content.add(monthPanel);
         content.add(limitPanel);
@@ -118,10 +109,10 @@ public class SetBudgetView extends JPanel {
 
         // Input listeners to enable Save/Reset
         Runnable updateButtons = () -> {
-            boolean anyInput = !limitField.getText().isEmpty()
-                    || !totalSpentField.getText().isEmpty();
-            saveBtn.setEnabled(anyInput);
-            resetBtn.setEnabled(anyInput);
+            boolean resetUnlocked = !limitField.getText().isEmpty() || !totalSpentField.getText().isEmpty();
+            resetBtn.setEnabled(resetUnlocked);
+            boolean saveUnlocked = !limitField.getText().isEmpty() && !totalSpentField.getText().isEmpty();
+            saveBtn.setEnabled(saveUnlocked);
         };
 
         limitField.getDocument().addDocumentListener(new SimpleListener(updateButtons));
@@ -130,27 +121,15 @@ public class SetBudgetView extends JPanel {
         // Button actions
         saveBtn.addActionListener(e -> handleSave());
         resetBtn.addActionListener(e -> {
-            limitField.setText("");
-            totalSpentField.setText("");
-            messageLabel.setText(" ");
-            resetBtn.setEnabled(false);
-            saveBtn.setEnabled(false);
+            clearForm();
         });
 
         prevButton.addActionListener(e -> {
-            limitField.setText("");
-            totalSpentField.setText("");
-            messageLabel.setText(" ");
-            resetBtn.setEnabled(false);
-            saveBtn.setEnabled(false);
+            clearForm();
             changeMonth(-1);
         });
         nextButton.addActionListener(e -> {
-            limitField.setText("");
-            totalSpentField.setText("");
-            messageLabel.setText(" ");
-            resetBtn.setEnabled(false);
-            saveBtn.setEnabled(false);
+            clearForm();
             changeMonth(1);
         });
     }
@@ -189,6 +168,14 @@ public class SetBudgetView extends JPanel {
         }
 
         messageLabel.setText(viewModel.getMessage());
+    }
+
+    private void clearForm() {
+        limitField.setText("");
+        totalSpentField.setText("");
+        messageLabel.setText(" ");
+        resetBtn.setEnabled(false);
+        saveBtn.setEnabled(false);
     }
 
     // Month switching (same as CheckBudget)
@@ -246,18 +233,18 @@ public class SetBudgetView extends JPanel {
                 monthCombo.setSelectedIndex(monthNumber - 1);
             }
             yearCombo.setSelectedItem(year);
-        } catch (NumberFormatException e) {
-            // ignore bad format
+        }
+        catch (NumberFormatException e) { // ignore bad format
         }
     }
-}
 
-// Helper listener
-class SimpleListener implements javax.swing.event.DocumentListener {
-    private final Runnable callback;
-    public SimpleListener(Runnable r) { this.callback = r; }
+    // Helper listener
+    private class SimpleListener implements javax.swing.event.DocumentListener {
+        private final Runnable callback;
+        SimpleListener(Runnable r) { this.callback = r; }
 
-    public void insertUpdate(javax.swing.event.DocumentEvent e) { callback.run(); }
-    public void removeUpdate(javax.swing.event.DocumentEvent e) { callback.run(); }
-    public void changedUpdate(javax.swing.event.DocumentEvent e) { callback.run(); }
+        @Override public void insertUpdate(javax.swing.event.DocumentEvent e) { callback.run(); }
+        @Override public void removeUpdate(javax.swing.event.DocumentEvent e) { callback.run(); }
+        @Override public void changedUpdate(javax.swing.event.DocumentEvent e) { callback.run(); }
+    }
 }

@@ -11,6 +11,7 @@ public class BudgetInputData {
         this.totalSpent = totalSpent;
     }
 
+    // Getters
     public String getMonth() {return month;}
     public float getLimit() {return limit;}
     public float getTotalSpent() {return totalSpent;}

@@ -7,8 +7,7 @@ public class BudgetInteractor implements BudgetInputBoundary {
     private final BudgetDataAccessInterface budgetDataAccess;
     private final BudgetOutputBoundary presenter;
 
-    public BudgetInteractor(BudgetDataAccessInterface budgetDataAccess,
-                            BudgetOutputBoundary presenter) {
+    public BudgetInteractor(BudgetDataAccessInterface budgetDataAccess, BudgetOutputBoundary presenter) {
         this.budgetDataAccess = budgetDataAccess;
         this.presenter = presenter;
     }
@@ -19,27 +18,26 @@ public class BudgetInteractor implements BudgetInputBoundary {
         float limit = inputData.getLimit();
         float totalSpent = inputData.getTotalSpent();
 
-        // Load or create Budget entity
+        // Load or create entity
         Budget budget = budgetDataAccess.getBudgetForMonth(month);
         if (budget == null) {
             budget = new Budget(month);
         }
+
+        // Update core fields
         budget.setLimit(limit);
         budget.setTotalSpent(totalSpent);
+
+        // Update timestamp
+        String timestamp = java.time.ZonedDateTime.now(java.time.ZoneId.of("America/Toronto"))
+                .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z"));
+        budget.setLastUpdated(timestamp);
+
+        // Persist changes
         float remaining = budget.getRemaining();
-
-        // Save main fields
         budgetDataAccess.saveBudget(budget);
 
-        // ⭐ NEW: Update lastUpdated timestamp
-        String ts = java.time.ZonedDateTime.now(java.time.ZoneId.of("America/Toronto"))
-                .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss z"));
-        budget.setLastUpdated(ts);
-
-        // Save updated timestamp
-        budgetDataAccess.saveBudget(budget);
-
-        // Build output and notify presenter
+        // Send output to presenter
         BudgetOutputData outputData =
                 new BudgetOutputData(month, limit, totalSpent, remaining, true,
                         "Budget set successfully.");

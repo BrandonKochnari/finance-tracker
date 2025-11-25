@@ -5,9 +5,8 @@ import java.awt.*;
 
 public class MainMenuView extends JPanel {
 
-    public MainMenuView(Runnable onAddBudget,
-                        Runnable onCheckBudget,
-                        Runnable onFullYear) {
+    // Main menu screen displaying all 3 navigation options
+    public MainMenuView(Runnable onAddBudget, Runnable onCheckBudget, Runnable onFullYear) {
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -20,38 +19,34 @@ public class MainMenuView extends JPanel {
         subtitle.setAlignmentX(Component.CENTER_ALIGNMENT);
         subtitle.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
 
-        JButton addBudgetButton = new JButton("Add / Edit Budget");
-        JButton checkBudgetButton = new JButton("Check Budget");
-        JButton fullYearButton = new JButton("Year Overview");
-
-        addBudgetButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        checkBudgetButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        fullYearButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-
         Dimension buttonSize = new Dimension(220, 40);
-        addBudgetButton.setPreferredSize(buttonSize);
-        checkBudgetButton.setPreferredSize(buttonSize);
-        fullYearButton.setPreferredSize(buttonSize);
 
-        addBudgetButton.addActionListener(e -> {
-            if (onAddBudget != null) onAddBudget.run();
-        });
+        JButton addBudgetButton = createMenuButton("Add / Edit Budget", buttonSize, onAddBudget);
+        JButton checkBudgetButton = createMenuButton("Check Budget", buttonSize, onCheckBudget);
+        JButton fullYearButton = createMenuButton("Year Overview", buttonSize, onFullYear);
 
-        checkBudgetButton.addActionListener(e -> {
-            if (onCheckBudget != null) onCheckBudget.run();
-        });
-
-        fullYearButton.addActionListener(e -> {
-            if (onFullYear != null) onFullYear.run();
-        });
-
+        // Center everything vertically a bit more nicely
+        add(Box.createVerticalGlue());
         add(title);
         add(subtitle);
-        add(Box.createVerticalStrut(10));
         add(addBudgetButton);
         add(Box.createVerticalStrut(10));
         add(checkBudgetButton);
         add(Box.createVerticalStrut(10));
         add(fullYearButton);
+        add(Box.createVerticalGlue());
+    }
+
+    // Helper to make consistent, centered buttons
+    private JButton createMenuButton(String text, Dimension size, Runnable action) {
+        JButton button = new JButton(text);
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+        button.setPreferredSize(size);
+        button.setMaximumSize(size);
+        button.setMinimumSize(size);
+        button.addActionListener(e -> {
+            if (action != null) action.run();
+        });
+        return button;
     }
 }

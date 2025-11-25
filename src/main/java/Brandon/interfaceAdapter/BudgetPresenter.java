@@ -11,6 +11,7 @@ public class BudgetPresenter implements BudgetOutputBoundary {
         this.viewModel = viewModel;
     }
 
+    // Transfer output data from the use case into the ViewModel.
     @Override
     public void present(BudgetOutputData outputData) {
         viewModel.setMonth(outputData.getMonth());

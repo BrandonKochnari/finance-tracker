@@ -11,6 +11,7 @@ public class BudgetController {
         this.interactor = interactor;
     }
 
+    // Pass user input to interactor as a data object
     public void setBudget(String month, float limit, float totalSpent) {
         BudgetInputData inputData = new BudgetInputData(month, limit, totalSpent);
         interactor.execute(inputData);

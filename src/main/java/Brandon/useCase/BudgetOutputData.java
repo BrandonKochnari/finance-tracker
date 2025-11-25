@@ -17,6 +17,7 @@ public class BudgetOutputData {
         this.message = message;
     }
 
+    // Getters
     public String getMonth() {return month;}
     public float getLimit() {return limit;}
     public float getTotalSpent() {return totalSpent;}

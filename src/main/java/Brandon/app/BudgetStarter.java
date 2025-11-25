@@ -30,10 +30,8 @@ public class BudgetStarter {
             // Set Budget pipeline
             BudgetViewModel setBudgetViewModel = new BudgetViewModel();
             BudgetPresenter setBudgetPresenter = new BudgetPresenter(setBudgetViewModel);
-            BudgetInteractor setBudgetInteractor =
-                    new BudgetInteractor(dataAccess, setBudgetPresenter);
-            BudgetController setBudgetController =
-                    new BudgetController(setBudgetInteractor);
+            BudgetInteractor setBudgetInteractor = new BudgetInteractor(dataAccess, setBudgetPresenter);
+            BudgetController setBudgetController = new BudgetController(setBudgetInteractor);
 
             // Root panel with CardLayout
             CardLayout cardLayout = new CardLayout();
@@ -46,22 +44,22 @@ public class BudgetStarter {
                     () -> cardLayout.show(root, YEAR_OVERVIEW)
             );
 
-            // Add SetBudgetView
+            // Add SetBudgetView and destinations
             SetBudgetView addBudgetView = new SetBudgetView(setBudgetController, setBudgetViewModel,
                     () -> cardLayout.show(root, MAIN_MENU)
             );
 
-            // Add CheckBudgetView - Add Budget button that jumps directly to ADD_BUDGET
+            // Add CheckBudgetView and destinations
             CheckBudgetView checkBudgetView = new CheckBudgetView(dataAccess, () -> cardLayout.show(root, MAIN_MENU),
                     monthKey -> {addBudgetView.setMonthYearFromKey(monthKey); cardLayout.show(root, ADD_BUDGET);}
             );
 
+            // Add YearOverviewView and destinations
             YearOverviewView yearOverviewView =
-                    new YearOverviewView(dataAccess, () -> cardLayout.show(root, MAIN_MENU));
-
-            // Add YearOverviewView
-            JPanel fullYearView = new JPanel();
-            fullYearView.add(new JLabel("Full Year Budget view coming soon."));
+                    new YearOverviewView(dataAccess, () -> cardLayout.show(root, MAIN_MENU),
+                            monthKey -> {checkBudgetView.setMonthYearFromKey(monthKey);
+                        cardLayout.show(root, CHECK_BUDGET);}
+                    );
 
             // Add all views to the root card panel
             root.add(mainMenuView, MAIN_MENU);
@@ -71,10 +69,9 @@ public class BudgetStarter {
 
             // Frame setup
             JFrame frame = new JFrame("Budget Manager");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             frame.setContentPane(root);
             frame.setMinimumSize(new Dimension(600, 600));
-            frame.pack();
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
 

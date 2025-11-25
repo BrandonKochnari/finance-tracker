@@ -46,12 +46,10 @@ public class CheckBudgetView extends JPanel {
     private String currentMonthKey = null;
     private boolean suppressNoteEvents = false;
 
-    public CheckBudgetView(BudgetDataAccessInterface dataAccess,
-                           Runnable onBackToMenu,
+    public CheckBudgetView(BudgetDataAccessInterface dataAccess, Runnable onBackToMenu,
                            Consumer<String> onAddBudgetForMonth) {
         this.dataAccess = dataAccess;
 
-        // --- month & year models ---
         String[] months = {
                 "January", "February", "March", "April", "May", "June",
                 "July", "August", "September", "October", "November", "December"
@@ -64,8 +62,14 @@ public class CheckBudgetView extends JPanel {
         }
         yearCombo = new JComboBox<>(yearModel);
 
-        monthCombo.addActionListener(e -> handleCheckBudget());
-        yearCombo.addActionListener(e -> handleCheckBudget());
+        monthCombo.addActionListener(e -> {
+            saveNote();
+            handleCheckBudget();
+        });
+        yearCombo.addActionListener(e -> {
+            saveNote();
+            handleCheckBudget();
+        });
 
         // Set default to current date
         yearCombo.setSelectedItem(java.time.Year.now().getValue());
@@ -73,20 +77,17 @@ public class CheckBudgetView extends JPanel {
 
         setLayout(new BorderLayout());
 
-        // TOP: Back button
+        // Back button
         JButton backButton = new JButton("← BACK");
-        backButton.addActionListener(e -> {
-            if (onBackToMenu != null) onBackToMenu.run();
-        });
+        backButton.addActionListener(e -> {saveNote(); if (onBackToMenu != null) onBackToMenu.run();});
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         topPanel.add(backButton);
         add(topPanel, BorderLayout.NORTH);
 
-        // CENTER: main content
+        // Main content
         JPanel content = new JPanel();
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
 
-        // Month + Year row: [←] Month [combo] Year [combo] [→]
         JPanel monthPanel = new JPanel();
         monthPanel.add(prevButton);
         monthPanel.add(new JLabel("Month: "));
@@ -96,7 +97,7 @@ public class CheckBudgetView extends JPanel {
         monthPanel.add(nextButton);
 
         JPanel buttonPanel = new JPanel();
-        JButton addBudgetButton = new JButton("ADD Budget");
+        JButton addBudgetButton = new JButton("ADD / EDIT Budget");
         buttonPanel.add(addBudgetButton);
         JButton resetBudgetButton = new JButton("RESET Budget");
         buttonPanel.add(resetBudgetButton);
@@ -114,12 +115,11 @@ public class CheckBudgetView extends JPanel {
         infoPanel.add(spentLabel);
         infoPanel.add(remainingLabel);
 
-        // Status row: "Status: " [value]
+        // Status row
         JPanel statusPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 10));
         JLabel statusTitleLabel = new JLabel("Status: ");
         statusPanel.add(statusTitleLabel);
         statusPanel.add(statusValueLabel);
-
         infoPanel.add(statusPanel);
 
         content.add(monthPanel);
@@ -128,7 +128,7 @@ public class CheckBudgetView extends JPanel {
         content.add(Box.createVerticalStrut(10));
         content.add(infoPanel);
 
-        // ===== Extra notes (small, non-scroll, char limit) =====
+        // Extra notes
         notesArea.setLineWrap(true);
         notesArea.setWrapStyleWord(true);
         notesArea.setRows(5);
@@ -151,10 +151,11 @@ public class CheckBudgetView extends JPanel {
         notesArea.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (!notesArea.isEnabled()) return;
+                if (!notesArea.isEnabled()) return;   // Ignore when locked
 
+                // Remove placeholder on first click
                 if (notesArea.getText().equals(NOTES_PLACEHOLDER)) {
-                    suppressNoteEvents = true;
+                    suppressNoteEvents = true; // Prevent timestamp update
                     notesArea.setText("");
                     suppressNoteEvents = false;
                     notesArea.setForeground(Color.BLACK);
@@ -163,8 +164,13 @@ public class CheckBudgetView extends JPanel {
 
             @Override
             public void focusLost(FocusEvent e) {
-                if (notesArea.getText().trim().isEmpty()) {
+                String txt = notesArea.getText().trim();
+
+                // If empty → restore placeholder
+                if (txt.isEmpty()) {
+                    suppressNoteEvents = true;
                     notesArea.setText(NOTES_PLACEHOLDER);
+                    suppressNoteEvents = false;
                     notesArea.setForeground(Color.GRAY);
                     charCountLabel.setText("0 / " + NOTES_MAX_CHARS);
                 }
@@ -177,11 +183,8 @@ public class CheckBudgetView extends JPanel {
             private void handleUserEdit() {
                 enforceNotesCharLimit();
 
-                if (!suppressNoteEvents &&
-                        notesArea.isEnabled() &&
-                        !notesArea.getText().equals(NOTES_PLACEHOLDER) &&
+                if (!suppressNoteEvents && notesArea.isEnabled() && !notesArea.getText().equals(NOTES_PLACEHOLDER) &&
                         !notesArea.getText().equals(NOTES_LOCKED_PLACEHOLDER)) {
-
                     updateLastUpdatedLabel();
                 }
             }
@@ -214,7 +217,7 @@ public class CheckBudgetView extends JPanel {
         content.add(Box.createVerticalStrut(10));
         content.add(notesPanel);
 
-        // ===== Last updated label =====
+        // Last updated label
         Font baseFont = lastUpdatedLabel.getFont();
         lastUpdatedLabel.setFont(baseFont.deriveFont(Font.ITALIC, baseFont.getSize() - 2f));
         lastUpdatedLabel.setForeground(Color.GRAY);
@@ -227,6 +230,8 @@ public class CheckBudgetView extends JPanel {
         // Button handlers
         resetBudgetButton.addActionListener(e -> handleResetBudget());
         addBudgetButton.addActionListener(e -> {
+            saveNote(); // Save current note
+
             if (onAddBudgetForMonth != null) {
                 Integer year = (Integer) yearCombo.getSelectedItem();
                 int monthIndex = monthCombo.getSelectedIndex();
@@ -253,14 +258,7 @@ public class CheckBudgetView extends JPanel {
         });
     }
 
-    public String formatMoney(float amount) {
-        if (amount < 0) {
-            return "-$" + String.format("%.2f", Math.abs(amount));
-        } else {
-            return "$" + String.format("%.2f", amount);
-        }
-    }
-
+    // Logic for check budget screen
     private void handleCheckBudget() {
         Integer year = (Integer) yearCombo.getSelectedItem();
         int monthIndex = monthCombo.getSelectedIndex();
@@ -272,7 +270,7 @@ public class CheckBudgetView extends JPanel {
         if (budget == null) {
             messageLabel.setForeground(Color.RED);
             messageLabel.setText("No budget found for " + monthKey + ".");
-            clearBudgetLabels();
+            clearLabels();
 
             notesArea.setEnabled(false);
             suppressNoteEvents = true;
@@ -283,7 +281,8 @@ public class CheckBudgetView extends JPanel {
             lastUpdatedLabel.setText(" ");
             currentMonthKey = null;
 
-        } else {
+        }
+        else {
             messageLabel.setForeground(new Color(4, 201, 4));
             messageLabel.setText("Budget found for " + monthKey + ".");
             limitLabel.setText("Limit: " + formatMoney(budget.getLimit()));
@@ -293,17 +292,17 @@ public class CheckBudgetView extends JPanel {
 
             if (budget.getStatus().equals("On track")) {
                 statusValueLabel.setForeground(new Color(4, 201, 4));
-            } else if (budget.getStatus().equals("Budget hit")) {
+            }
+            else if (budget.getStatus().equals("Budget hit")) {
                 statusValueLabel.setForeground(new Color(253, 218, 13));
-            } else {
+            }
+            else {
                 statusValueLabel.setForeground(Color.RED);
             }
 
             currentMonthKey = monthKey;
 
-            //----------------------------
-            // LOAD SAVED TIMESTAMP HERE
-            //----------------------------
+            // Load timestamp
             if (budget.getLastUpdated() != null && !budget.getLastUpdated().isBlank()) {
                 lastUpdatedLabel.setText("Last updated: " + budget.getLastUpdated());
             } else {
@@ -328,6 +327,7 @@ public class CheckBudgetView extends JPanel {
         }
     }
 
+    // Logic for resetting budget
     private void handleResetBudget() {
         Integer year = (Integer) yearCombo.getSelectedItem();
         int monthIndex = monthCombo.getSelectedIndex();
@@ -343,14 +343,15 @@ public class CheckBudgetView extends JPanel {
 
         dataAccess.deleteBudget(monthKey);
 
-        clearBudgetLabels();
+        clearLabels();
         currentMonthKey = null;
 
         messageLabel.setForeground(Color.RED);
         messageLabel.setText("Budget for " + monthKey + " has been reset.");
     }
 
-    private void clearBudgetLabels() {
+    // Return screen to template without data
+    private void clearLabels() {
         limitLabel.setText("Limit: ");
         spentLabel.setText("Total spent: ");
         remainingLabel.setText("Remaining: ");
@@ -367,17 +368,9 @@ public class CheckBudgetView extends JPanel {
         lastUpdatedLabel.setText(" ");
     }
 
+    // Logic for changing through months
     private void changeMonth(int change) {
-        if (currentMonthKey != null && notesArea.isEnabled()) {
-            String text = notesArea.getText();
-            if (!text.equals(NOTES_PLACEHOLDER)) {
-                Budget current = dataAccess.getBudgetForMonth(currentMonthKey);
-                if (current != null) {
-                    current.setNotes(text);
-                    dataAccess.saveBudget(current);
-                }
-            }
-        }
+        saveNote();
 
         int monthIndex = monthCombo.getSelectedIndex();
         Integer year = (Integer) yearCombo.getSelectedItem();
@@ -416,6 +409,7 @@ public class CheckBudgetView extends JPanel {
         handleCheckBudget();
     }
 
+    // Ensure user can't type more than max character count
     private void enforceNotesCharLimit() {
         if (!notesArea.isEnabled()) {
             charCountLabel.setText("0 / " + NOTES_MAX_CHARS);
@@ -442,13 +436,16 @@ public class CheckBudgetView extends JPanel {
 
         if (len == NOTES_MAX_CHARS) {
             charCountLabel.setForeground(Color.RED);
-        } else if (len > NOTES_MAX_CHARS - 15) {
+        }
+        else if (len > NOTES_MAX_CHARS - 15) {
             charCountLabel.setForeground(Color.RED);
-        } else {
+        }
+        else {
             charCountLabel.setForeground(Color.GRAY);
         }
     }
 
+    // Update timestamp
     private void updateLastUpdatedLabel() {
         ZoneId zone = ZoneId.of("America/Toronto");
         ZonedDateTime now = ZonedDateTime.now(zone);
@@ -457,15 +454,49 @@ public class CheckBudgetView extends JPanel {
 
         lastUpdatedLabel.setText("Last updated: " + formatted);
 
-        //-----------------------------
-        // SAVE TIMESTAMP TO ENTITY
-        //-----------------------------
+        // Save timestamp to entity
         if (currentMonthKey != null) {
             Budget b = dataAccess.getBudgetForMonth(currentMonthKey);
             if (b != null) {
                 b.setLastUpdated(formatted);
                 dataAccess.saveBudget(b);
             }
+        }
+    }
+
+    // Logic for saving current note
+    private void saveNote() {
+        if (currentMonthKey == null || !notesArea.isEnabled()) return;
+
+        Budget b = dataAccess.getBudgetForMonth(currentMonthKey);
+        if (b == null) return;
+
+        String text = notesArea.getText();
+
+        // empty or placeholder -> clear notes
+        if (text.trim().isEmpty() || text.equals(NOTES_PLACEHOLDER)) {
+            b.setNotes("");
+        } else {
+            b.setNotes(text);
+        }
+
+        dataAccess.saveBudget(b);
+    }
+
+    // Used by other views to jump directly to a specific month/year
+    public void setMonthYearFromKey(String key) {
+        String[] p = key.split("-");
+        monthCombo.setSelectedIndex(Integer.parseInt(p[0]) - 1);
+        yearCombo.setSelectedItem(Integer.parseInt(p[1]));
+        handleCheckBudget();
+    }
+
+    // Ensure dollar sign and negative values are properly formatted
+    public String formatMoney(float amount) {
+        if (amount < 0) {
+            return "-$" + String.format("%.2f", Math.abs(amount));
+        } else {
+            return "$" + String.format("%.2f", amount);
         }
     }
 }
