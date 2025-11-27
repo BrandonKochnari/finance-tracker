@@ -1,20 +1,15 @@
 package app;
 
-import data_access.InMemorySetBudgetDataAccess;
-import interface_adapter.budget.SetBudgetController;
-import interface_adapter.budget.SetBudgetPresenter;
-import interface_adapter.budget.SetBudgetViewModel;
-import use_case.budget.SetBudgetDataAccessInterface;
-import use_case.budget.SetBudgetInteractor;
-import view.budget.CheckBudgetView;
-import view.budget.MainMenuView;
-import view.budget.SetBudgetView;
-import view.budget.YearOverviewView;
+import use_case.budget.*;
+import interface_adapter.budget.*;
+import use_case.budget.BudgetInteractor;
+import view.budget.*;
+import data_access.InMemoryBudgetDataAccess;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class SetBudgetApp {
+public class BudgetApp {
 
     private static final String MAIN_MENU = "MAIN_MENU";
     private static final String ADD_BUDGET = "ADD_BUDGET";
@@ -25,15 +20,13 @@ public class SetBudgetApp {
         SwingUtilities.invokeLater(() -> {
 
             // Shared data access
-            SetBudgetDataAccessInterface dataAccess = new InMemorySetBudgetDataAccess();
+            BudgetDataAccessInterface dataAccess = new InMemoryBudgetDataAccess();
 
             // Set Budget pipeline
-            SetBudgetViewModel setBudgetViewModel = new SetBudgetViewModel();
-            SetBudgetPresenter setBudgetPresenter = new SetBudgetPresenter(setBudgetViewModel);
-            SetBudgetInteractor setBudgetInteractor =
-                    new SetBudgetInteractor(dataAccess, setBudgetPresenter);
-            SetBudgetController setBudgetController =
-                    new SetBudgetController(setBudgetInteractor);
+            BudgetViewModel setBudgetViewModel = new BudgetViewModel();
+            BudgetPresenter setBudgetPresenter = new BudgetPresenter(setBudgetViewModel);
+            BudgetInteractor setBudgetInteractor = new BudgetInteractor(dataAccess, setBudgetPresenter);
+            BudgetController setBudgetController = new BudgetController(setBudgetInteractor);
 
             // Root panel with CardLayout
             CardLayout cardLayout = new CardLayout();
@@ -46,23 +39,22 @@ public class SetBudgetApp {
                     () -> cardLayout.show(root, YEAR_OVERVIEW)
             );
 
-            // Add Budget view (SetBudgetView) with back to menu
+            // Add SetBudgetView and destinations
             SetBudgetView addBudgetView = new SetBudgetView(setBudgetController, setBudgetViewModel,
                     () -> cardLayout.show(root, MAIN_MENU)
             );
 
-            // Check Budget view with:
-            // - back to menu
-            // - Add Budget button that jumps directly to ADD_BUDGET
+            // Add CheckBudgetView and destinations
             CheckBudgetView checkBudgetView = new CheckBudgetView(dataAccess, () -> cardLayout.show(root, MAIN_MENU),
-                    () -> cardLayout.show(root, ADD_BUDGET)
+                    monthKey -> {addBudgetView.setMonthYearFromKey(monthKey); cardLayout.show(root, ADD_BUDGET);}
             );
 
-            YearOverviewView yearOverviewView = new YearOverviewView(() -> cardLayout.show(root, MAIN_MENU));
-
-            // Placeholder full-year view
-            JPanel fullYearView = new JPanel();
-            fullYearView.add(new JLabel("Full Year Budget view coming soon."));
+            // Add YearOverviewView and destinations
+            YearOverviewView yearOverviewView =
+                    new YearOverviewView(dataAccess, () -> cardLayout.show(root, MAIN_MENU),
+                            monthKey -> {checkBudgetView.setMonthYearFromKey(monthKey);
+                                cardLayout.show(root, CHECK_BUDGET);}
+                    );
 
             // Add all views to the root card panel
             root.add(mainMenuView, MAIN_MENU);
@@ -72,14 +64,11 @@ public class SetBudgetApp {
 
             // Frame setup
             JFrame frame = new JFrame("Budget Manager");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             frame.setContentPane(root);
-            frame.setMinimumSize(new Dimension(400, 400));
-            frame.pack();
+            frame.setMinimumSize(new Dimension(600, 600));
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
-            frame.setResizable(false);
-
 
             // Start on main menu
             cardLayout.show(root, MAIN_MENU);
