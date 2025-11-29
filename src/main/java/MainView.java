@@ -187,8 +187,6 @@ public class MainView extends JFrame {
         }
     }
 
-
-
     public static void main(String[] args) {
         //ToDo Get incomes/expenses from a database
         String[] expenses = {"Exp 1", "Exp 2", "Exp 3"};
