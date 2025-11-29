@@ -1,18 +1,19 @@
 package interface_adapter.budget;
 
-import use_case.budget.SetBudgetOutputBoundary;
-import use_case.budget.SetBudgetOutputData;
+import use_case.budget.BudgetOutputBoundary;
+import use_case.budget.BudgetOutputData;
 
-public class SetBudgetPresenter implements SetBudgetOutputBoundary {
+public class BudgetPresenter implements BudgetOutputBoundary {
 
-    private final SetBudgetViewModel viewModel;
+    private final BudgetViewModel viewModel;
 
-    public SetBudgetPresenter(SetBudgetViewModel viewModel) {
+    public BudgetPresenter(BudgetViewModel viewModel) {
         this.viewModel = viewModel;
     }
 
+    // Transfer output data from the use case into the ViewModel.
     @Override
-    public void present(SetBudgetOutputData outputData) {
+    public void present(BudgetOutputData outputData) {
         viewModel.setMonth(outputData.getMonth());
         viewModel.setLimit(outputData.getLimit());
         viewModel.setTotalSpent(outputData.getTotalSpent());
