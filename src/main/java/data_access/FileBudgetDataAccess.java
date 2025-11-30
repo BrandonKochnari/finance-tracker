@@ -58,7 +58,7 @@ public class FileBudgetDataAccess implements BudgetDataAccessInterface {
                 String lastUpdated = parts.length > 3 ? parts[3] : "";
                 String notes       = parts.length > 4 ? parts[4] : "";
 
-                Budget b = new Budget(month);
+                Budget b = new Budget(month, limit, totalSpent);
                 if (hasMethodSetLastUpdated(b)) {
                     b.setLastUpdated(lastUpdated);
                 }
