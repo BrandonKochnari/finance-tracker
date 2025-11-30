@@ -119,6 +119,7 @@ public class FinanceDataAccess implements
 
     // ===============================
     // Transaction persistence
+    // Credit: Kentaro - originally created TransactionDataAccessObject
     // ===============================
 
     /**
@@ -357,6 +358,7 @@ public class FinanceDataAccess implements
 
     // ===============================
     // BudgetDataAccessInterface
+    // Credit: Brandon - originally created FileBudgetDataAccess
     // ===============================
 
     /**
@@ -449,14 +451,11 @@ public class FinanceDataAccess implements
     }
 
     // ===============================
-    // Label-related interfaces (TODOs)
+    // Label-related interfaces
     // ===============================
-    // TODO: Proper label persistence should be implemented here in a later
-    // iteration.
 
     @Override
     public AddLabelExpense getAddLabelExpense(int id) {
-        // TODO: Implement retrieval of AddLabelExpense for a transaction
         return null;
     }
 

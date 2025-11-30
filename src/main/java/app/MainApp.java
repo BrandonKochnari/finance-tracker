@@ -243,7 +243,7 @@ public class MainApp extends JFrame {
             MainApp mainApp) {
         SwingUtilities.invokeLater(() -> {
             use_case.label.LabelUserCase labelUserCase = new use_case.label.LabelUserCaseImp(dataAccess,
-                    new data_access.ALEDataAccess());
+                    dataAccess);
             interface_adapter.label.LabelController controller = new interface_adapter.label.LabelController(
                     labelUserCase);
 

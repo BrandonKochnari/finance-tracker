@@ -4,7 +4,6 @@ import data_access.FinanceDataAccess;
 import interface_adapter.label.LabelController;
 import use_case.label.LabelUserCase;
 import use_case.label.LabelUserCaseImp;
-import data_access.ALEDataAccess;
 import view.label.ExpenseView;
 
 import javax.swing.*;
@@ -20,9 +19,7 @@ public class LabelApp {
     public static void start(FinanceDataAccess dataAccess, int userId) {
         SwingUtilities.invokeLater(() -> {
             // Set up use case with FinanceDataAccess (implements both interfaces)
-            ALEDataAccess aleDA = new ALEDataAccess();
-
-            LabelUserCase labelUserCase = new LabelUserCaseImp(dataAccess, aleDA);
+            LabelUserCase labelUserCase = new LabelUserCaseImp(dataAccess, dataAccess);
 
             // Set up controller
             LabelController controller = new LabelController(labelUserCase);
