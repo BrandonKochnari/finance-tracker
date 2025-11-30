@@ -4,7 +4,7 @@ import use_case.budget.*;
 import interface_adapter.budget.*;
 import use_case.budget.BudgetInteractor;
 import view.budget.*;
-import data_access.InMemoryBudgetDataAccess;
+import data_access.FileBudgetDataAccess;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,7 +20,7 @@ public class BudgetApp {
         SwingUtilities.invokeLater(() -> {
 
             // Shared data access
-            BudgetDataAccessInterface dataAccess = new InMemoryBudgetDataAccess();
+            BudgetDataAccessInterface dataAccess = new FileBudgetDataAccess("src/main/java/data_access/budgets.txt");
 
             // Set Budget pipeline
             BudgetViewModel setBudgetViewModel = new BudgetViewModel();
