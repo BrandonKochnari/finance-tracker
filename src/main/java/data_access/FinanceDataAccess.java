@@ -1,7 +1,6 @@
 package data_access;
 
 import entity.Budget;
-import entity.Category;
 import entity.Label;
 import entity.Transaction;
 import use_case.add_transaction.TransactionDataAccessInterface;
@@ -192,15 +191,6 @@ public class FinanceDataAccess implements
                     }
                 }
 
-                // for categories instantiation using new Category class
-                Category category = null;
-                if (obj.has("category") && !obj.isNull("category")) {
-                    String categoryName = obj.optString("category", "Food"); // default if null
-                    category = new Category(categoryName);
-                } else {
-                    category = new Category("Food"); // fallback default
-                }
-
                 // If no labels found, add the Uncategorized label
                 if (labels.isEmpty()) {
                     Label uncategorized = getUncategorizedLabel();
@@ -209,7 +199,7 @@ public class FinanceDataAccess implements
                     }
                 }
 
-                Transaction t = new Transaction(id, amount, labels, note, date, type, category);
+                Transaction t = new Transaction(id, amount, labels, note, date, type);
                 result.add(t);
             }
         } catch (Exception e) {
@@ -505,7 +495,7 @@ public class FinanceDataAccess implements
         boolean modified = false;
 
         for (Transaction t : transactions) {
-            if (t.getId() == id) {
+            if (t.getId() == (long) id) {
                 List<Label> labels = t.getLabels();
 
                 // Remove Uncategorized label if this is a new user-added label
@@ -523,10 +513,16 @@ public class FinanceDataAccess implements
 
                     if (!alreadyHasLabel) {
                         labels.add(label);
+                        modified = true;
                     }
+                } else {
+                    // If labels is null, initialize it
+                    labels = new ArrayList<>();
+                    labels.add(label);
+                    t.setLabels(labels);
+                    modified = true;
                 }
 
-                modified = true;
                 break;
             }
         }
@@ -542,7 +538,7 @@ public class FinanceDataAccess implements
         boolean modified = false;
 
         for (Transaction t : transactions) {
-            if (t.getId() == id) {
+            if (t.getId() == (long) id) {
                 List<Label> labels = t.getLabels();
                 if (labels != null) {
                     int before = labels.size();

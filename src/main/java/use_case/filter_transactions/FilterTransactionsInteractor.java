@@ -1,6 +1,5 @@
 package use_case.filter_transactions;
 
-import entity.Category;
 import entity.Transaction;
 import use_case.add_transaction.TransactionDataAccessInterface;
 
@@ -13,7 +12,7 @@ public class FilterTransactionsInteractor implements FilterTransactionsInputBoun
     private final FilterTransactionsOutputBoundary presenter;
 
     public FilterTransactionsInteractor(TransactionDataAccessInterface dataAccess,
-                                        FilterTransactionsOutputBoundary presenter) {
+            FilterTransactionsOutputBoundary presenter) {
         this.dataAccess = dataAccess;
         this.presenter = presenter;
     }
@@ -27,18 +26,15 @@ public class FilterTransactionsInteractor implements FilterTransactionsInputBoun
             return;
         }
 
-        String categoryName = input.trim();
+        String labelName = input.trim();
 
-        // Create a category object from the user input
-        Category selectedCategory = new Category(categoryName);
-
-        // Filter by category name (case-insensitive)
+        // Filter by label name (case-insensitive)
         List<Transaction> filtered = dataAccess.getAll().stream()
-                .filter(t -> t.getCategory() != null &&
-                        t.getCategory().getName().equalsIgnoreCase(selectedCategory.getName()))
+                .filter(t -> t.getLabels() != null &&
+                        t.getLabels().stream()
+                                .anyMatch(label -> label.getLabelName().equalsIgnoreCase(labelName)))
                 .collect(Collectors.toList());
 
         presenter.present(new FilterTransactionsResponseModel(filtered));
     }
 }
-

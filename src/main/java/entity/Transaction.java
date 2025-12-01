@@ -13,20 +13,18 @@ public class Transaction {
     private String note;
     private Date date;
     private String type; // either "income" or "expense", not case-sensitive
-    private Category category;
 
     /*
      * Constructor for Transaction class.
      * this constructor takes in parameters for faster Transaction creation
      */
-    public Transaction(long id, float amount, List<Label> labels, String note, Date date, String type, Category category) {
+    public Transaction(long id, float amount, List<Label> labels, String note, Date date, String type) {
         this.id = id;
         this.amount = amount;
         this.labels = labels;
         this.note = note;
         this.date = date;
         this.type = type;
-        this.category = category;
     }
 
     // Getters and Setters for each field
@@ -78,10 +76,6 @@ public class Transaction {
         this.type = type;
     }
 
-    public Category getCategory() { return category; }
-
-    public void setCategory(Category category) { this.category = category; }
-
     @Override
     public String toString() {
         return "Transaction{" +
@@ -91,7 +85,6 @@ public class Transaction {
                 ", note='" + note + '\'' +
                 ", labels='" + labels + '\'' +
                 ", date=" + date +
-                ", category=" + category +
                 '}';
     }
 

@@ -1,0 +1,20 @@
+{"labels": [
+    {
+        "labelId": 1,
+        "color": "#CCCCCC",
+        "description": "Default label for uncategorized transactions",
+        "labelName": "Uncategorized"
+    },
+    {
+        "labelId": 2,
+        "color": "#FFB3BA",
+        "description": "",
+        "labelName": "test"
+    },
+    {
+        "labelId": 3,
+        "color": "#FFB3BA",
+        "description": "",
+        "labelName": "test2"
+    }
+]}

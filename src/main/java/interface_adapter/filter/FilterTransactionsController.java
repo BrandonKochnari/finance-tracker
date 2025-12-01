@@ -1,8 +1,5 @@
 package interface_adapter.filter;
 
-import java.util.List;
-
-import entity.Category;
 import use_case.filter_transactions.FilterTransactionsInputBoundary;
 import use_case.filter_transactions.FilterTransactionsRequestModel;
 
@@ -18,6 +15,3 @@ public class FilterTransactionsController {
         interactor.filterByCategory(request);
     }
 }
-
-
-

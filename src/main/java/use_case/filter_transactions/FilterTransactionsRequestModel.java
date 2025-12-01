@@ -1,17 +1,13 @@
 package use_case.filter_transactions;
 
-import entity.Category;
-
-
 public class FilterTransactionsRequestModel {
-    private final String categoryInput;
+    private final String labelInput;
 
-    public FilterTransactionsRequestModel(String categoryInput) {
-        this.categoryInput = categoryInput;
+    public FilterTransactionsRequestModel(String labelInput) {
+        this.labelInput = labelInput;
     }
 
     public String getCategoryInput() {
-        return categoryInput;
+        return labelInput;
     }
 }
-

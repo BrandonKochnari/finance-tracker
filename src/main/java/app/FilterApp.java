@@ -20,20 +20,19 @@ public class FilterApp {
         FilterTransactionsOutputBoundary presenter = new FilterTransactionsPresenter(viewModel);
 
         // Interactor
-        FilterTransactionsInputBoundary interactor =
-                new FilterTransactionsInteractor(dataAccess, presenter);
+        FilterTransactionsInputBoundary interactor = new FilterTransactionsInteractor(dataAccess, presenter);
 
         // Controller
-        FilterTransactionsController controller =
-                new FilterTransactionsController(interactor);
+        FilterTransactionsController controller = new FilterTransactionsController(interactor);
 
         // View
-        FilterTransactionsView view = new FilterTransactionsView(controller, viewModel);
+        FilterTransactionsView view = new FilterTransactionsView(controller, viewModel, dataAccess);
 
         view.setVisible(true);
     }
+
     public static void main(String[] args) {
-        //set up data access
+        // set up data access
         TransactionDataAccessInterface dataAccess = new FinanceDataAccess();
 
         FilterTransactionsViewModel viewModel = new FilterTransactionsViewModel();
@@ -41,8 +40,7 @@ public class FilterApp {
         FilterTransactionsInputBoundary interactor = new FilterTransactionsInteractor(dataAccess, presenter);
         FilterTransactionsController controller = new FilterTransactionsController(interactor);
 
-        new FilterTransactionsView(controller, viewModel);
+        new FilterTransactionsView(controller, viewModel, (FinanceDataAccess) dataAccess);
 
     }
 }
-
