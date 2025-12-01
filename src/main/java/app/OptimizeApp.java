@@ -8,6 +8,7 @@ import use_case.optimize.OptimizeInteractor;
 import view.optimize.OptimizeView;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class OptimizeApp {
     private OptimizeApp(){
@@ -26,6 +27,7 @@ public class OptimizeApp {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         frame.add(optimizeView);
+        frame.setMinimumSize(new Dimension(500, 500));
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
