@@ -4,7 +4,6 @@ import data_access.FinanceDataAccess;
 import interface_adapter.graph.GraphController;
 import interface_adapter.graph.GraphPresenter;
 import interface_adapter.graph.GraphViewModel;
-import use_case.graph.GraphDataAccessInterface;
 import use_case.graph.GraphInteractor;
 import view.graph.GraphPanel;
 
@@ -12,16 +11,19 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GraphApp {
+    private GraphApp(){
+        throw new IllegalStateException("Utility class");
+    }
+
     public static void start(FinanceDataAccess financeDataAccess) {
         // Use the shared FinanceDataAccess instance
-        GraphDataAccessInterface dataAccess = financeDataAccess;
 
         // Set up presenter and view model
         GraphViewModel viewModel = new GraphViewModel();
         GraphPresenter presenter = new GraphPresenter(viewModel);
 
         // Set up interactor
-        GraphInteractor interactor = new GraphInteractor(dataAccess, presenter);
+        GraphInteractor interactor = new GraphInteractor(financeDataAccess, presenter);
 
         // Set up controller
         GraphController controller = new GraphController(interactor);

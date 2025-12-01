@@ -9,6 +9,9 @@ import view.label.ExpenseView;
 import javax.swing.*;
 
 public class LabelApp {
+    private LabelApp(){
+        throw new IllegalStateException("Utility class");
+    }
 
     /**
      * Start the label management view

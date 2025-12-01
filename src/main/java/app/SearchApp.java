@@ -6,6 +6,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class SearchApp {
+    private SearchApp(){
+        throw new IllegalStateException("Utility class");
+    }
 
     public static void start(FinanceDataAccess dataAccess) {
         SwingUtilities.invokeLater(() -> {
@@ -63,9 +66,8 @@ public class SearchApp {
                         OptimizeApp.start();
                         frame.dispose();
                     }
-                    default -> {
+                    default ->
                         errorLabel.setText("Unknown view: \"" + text + "\"");
-                    }
                 }
             };
 

@@ -3,6 +3,7 @@ package data_access;
 import entity.Budget;
 import entity.Label;
 import entity.Transaction;
+import org.jetbrains.annotations.NotNull;
 import use_case.add_transaction.TransactionDataAccessInterface;
 import use_case.graph.GraphDataAccessInterface;
 import use_case.label.ALEDataAccessInterface;
@@ -27,7 +28,7 @@ import java.util.List;
  * FinanceDataAccess implements the different data access interfaces for this
  * application
  * and persists data into three JSON files:
- *
+ * <p>
  * 1) TransactionData.JSON
  * [
  * {
@@ -40,10 +41,10 @@ import java.util.List;
  * },
  * ...
  * ]
- *
+ * <p>
  * 2) LabelData.JSON
  * (reserved for future label persistence)
- *
+ * <p>
  * 3) BudgetData.JSON
  * {
  * "budgets": [
@@ -64,6 +65,15 @@ public class FinanceDataAccess implements
         ALEDataAccessInterface,
         LabelDataAccessInterface {
 
+    public static final String UNCATEGORIZED = "Uncategorized";
+    public static final String LABEL_IDS = "labelIds";
+    public static final String GRAPH_RANGE = "graphRange";
+    public static final String GRAPH_TYPE = "graphType";
+    public static final String LABELS = "labels";
+    public static final String LABEL_ID = "labelId";
+    public static final String LABEL_NAME = "labelName";
+    public static final String COLOR = "color";
+    public static final String DESCRIPTION = "description";
     private final File transactionFile;
     private final File labelFile;
     private final File budgetFile;
@@ -93,8 +103,8 @@ public class FinanceDataAccess implements
      */
     private void ensureUncategorizedLabel() {
         final int DEFAULT_USER_ID = 1;
-        if (!labelExists(DEFAULT_USER_ID, "Uncategorized")) {
-            Label uncategorized = new Label(0, "Uncategorized", "#CCCCCC",
+        if (!labelExists(DEFAULT_USER_ID, UNCATEGORIZED)) {
+            Label uncategorized = new Label(0, UNCATEGORIZED, "#CCCCCC",
                     "Default label for uncategorized transactions");
             createLabel(uncategorized);
         }
@@ -109,7 +119,7 @@ public class FinanceDataAccess implements
         final int DEFAULT_USER_ID = 1;
         List<Label> labels = getAllLabelsByUser(DEFAULT_USER_ID);
         for (Label label : labels) {
-            if ("Uncategorized".equalsIgnoreCase(label.getLabelName())) {
+            if (UNCATEGORIZED.equalsIgnoreCase(label.getLabelName())) {
                 return label;
             }
         }
@@ -160,46 +170,7 @@ public class FinanceDataAccess implements
         try {
             JSONArray arr = new JSONArray(content);
             for (int i = 0; i < arr.length(); i++) {
-                JSONObject obj = arr.getJSONObject(i);
-
-                long id = obj.optLong("id");
-                float amount = (float) obj.optDouble("amount", 0.0);
-                String type = obj.optString("type", null);
-                String note = obj.optString("note", null);
-
-                Date date = null;
-                if (obj.has("date") && !obj.isNull("date")) {
-                    String dateString = obj.get("date").toString();
-                    try {
-                        long millis = Long.parseLong(dateString);
-                        date = new Date(millis);
-                    } catch (NumberFormatException ignored) {
-                        // leave date as null if parsing fails
-                    }
-                }
-
-                // Reconstruct labels from labelIds
-                List<Label> labels = new ArrayList<>();
-                if (obj.has("labelIds") && !obj.isNull("labelIds")) {
-                    JSONArray labelIdsArray = obj.getJSONArray("labelIds");
-                    for (int j = 0; j < labelIdsArray.length(); j++) {
-                        int labelId = labelIdsArray.getInt(j);
-                        Label label = getLabelById(labelId);
-                        if (label != null) {
-                            labels.add(label);
-                        }
-                    }
-                }
-
-                // If no labels found, add the Uncategorized label
-                if (labels.isEmpty()) {
-                    Label uncategorized = getUncategorizedLabel();
-                    if (uncategorized != null) {
-                        labels.add(uncategorized);
-                    }
-                }
-
-                Transaction t = new Transaction(id, amount, labels, note, date, type);
+                Transaction t = getTransaction(arr, i);
                 result.add(t);
             }
         } catch (Exception e) {
@@ -207,6 +178,50 @@ public class FinanceDataAccess implements
         }
 
         return result;
+    }
+
+    @NotNull
+    private Transaction getTransaction(JSONArray arr, int i) {
+        JSONObject obj = arr.getJSONObject(i);
+
+        long id = obj.optLong("id");
+        float amount = (float) obj.optDouble("amount", 0.0);
+        String type = obj.optString("type", null);
+        String note = obj.optString("note", null);
+
+        Date date = null;
+        if (obj.has("date") && !obj.isNull("date")) {
+            String dateString = obj.get("date").toString();
+            try {
+                long millis = Long.parseLong(dateString);
+                date = new Date(millis);
+            } catch (NumberFormatException ignored) {
+                // leave date as null if parsing fails
+            }
+        }
+
+        // Reconstruct labels from labelIds
+        List<Label> labels = new ArrayList<>();
+        if (obj.has(LABEL_IDS) && !obj.isNull(LABEL_IDS)) {
+            JSONArray labelIdsArray = obj.getJSONArray(LABEL_IDS);
+            for (int j = 0; j < labelIdsArray.length(); j++) {
+                int labelId = labelIdsArray.getInt(j);
+                Label label = getLabelById(labelId);
+                if (label != null) {
+                    labels.add(label);
+                }
+            }
+        }
+
+        // If no labels found, add the Uncategorized label
+        if (labels.isEmpty()) {
+            Label uncategorized = getUncategorizedLabel();
+            if (uncategorized != null) {
+                labels.add(uncategorized);
+            }
+        }
+
+        return new Transaction(id, amount, labels, note, date, type);
     }
 
     /**
@@ -248,7 +263,7 @@ public class FinanceDataAccess implements
                     labelIds.put(label.getLabelId());
                 }
             }
-            obj.put("labelIds", labelIds);
+            obj.put(LABEL_IDS, labelIds);
 
             arr.put(obj);
         }
@@ -278,7 +293,7 @@ public class FinanceDataAccess implements
     @Override
     public synchronized void saveGraphRange(String lineGraphRange) {
         JSONObject root = readBudgetRoot();
-        root.put("graphRange", lineGraphRange);
+        root.put(GRAPH_RANGE, lineGraphRange);
         writeBudgetRoot(root);
     }
 
@@ -290,7 +305,7 @@ public class FinanceDataAccess implements
     @Override
     public synchronized void saveGraphType(String type) {
         JSONObject root = readBudgetRoot();
-        root.put("graphType", type);
+        root.put(GRAPH_TYPE, type);
         writeBudgetRoot(root);
     }
 
@@ -302,10 +317,10 @@ public class FinanceDataAccess implements
     @Override
     public synchronized String getRange() {
         JSONObject root = readBudgetRoot();
-        if (!root.has("graphRange") || root.isNull("graphRange")) {
+        if (!root.has(GRAPH_RANGE) || root.isNull(GRAPH_RANGE)) {
             return null;
         }
-        return root.optString("graphRange", null);
+        return root.optString(GRAPH_RANGE, null);
     }
 
     /**
@@ -316,10 +331,10 @@ public class FinanceDataAccess implements
     @Override
     public synchronized String getType() {
         JSONObject root = readBudgetRoot();
-        if (!root.has("graphType") || root.isNull("graphType")) {
+        if (!root.has(GRAPH_TYPE) || root.isNull(GRAPH_TYPE)) {
             return null;
         }
-        return root.optString("graphType", null);
+        return root.optString(GRAPH_TYPE, null);
     }
 
     /**
@@ -501,22 +516,24 @@ public class FinanceDataAccess implements
 
         for (Transaction t : transactions) {
             List<Label> labels = t.getLabels();
-            if (labels != null) {
-                int sizeBefore = labels.size();
-                labels.removeIf(l -> l.getLabelId() == labelId);
+            if (labels == null)
+                continue;
 
-                if (labels.size() != sizeBefore) {
-                    modified = true;
+            int sizeBefore = labels.size();
+            labels.removeIf(l -> l.getLabelId() == labelId);
 
-                    // If transaction now has no labels, add Uncategorized
-                    if (labels.isEmpty()) {
-                        Label uncategorized = getUncategorizedLabel();
-                        if (uncategorized != null) {
-                            labels.add(uncategorized);
-                        }
+            if (labels.size() != sizeBefore) {
+                modified = true;
+
+                // If transaction now has no labels, add Uncategorized
+                if (labels.isEmpty()) {
+                    Label uncategorized = getUncategorizedLabel();
+                    if (uncategorized != null) {
+                        labels.add(uncategorized);
                     }
                 }
             }
+
         }
 
         if (modified) {
@@ -530,32 +547,33 @@ public class FinanceDataAccess implements
         boolean modified = false;
 
         for (Transaction t : transactions) {
-            if (t.getId() == id) {
-                List<Label> labels = t.getLabels();
+            if (t.getId() != id)
+                continue;
 
-                // Remove Uncategorized label if this is a new user-added label
-                if (labels != null) {
-                    labels.removeIf(l -> "Uncategorized".equalsIgnoreCase(l.getLabelName()));
+            List<Label> labels = t.getLabels();
 
-                    // Add the new label if not already present
-                    boolean alreadyHasLabel = false;
-                    for (Label existingLabel : labels) {
-                        if (existingLabel.getLabelId() == label.getLabelId()) {
-                            alreadyHasLabel = true;
-                            break;
-                        }
-                    }
+            // Remove Uncategorized label if this is a new user-added label
+            if (labels == null)
+                continue;
 
-                    if (!alreadyHasLabel) {
-                        labels.add(label);
-                    }
+            labels.removeIf(l -> UNCATEGORIZED.equalsIgnoreCase(l.getLabelName()));
+
+            // Add the new label if not already present
+            boolean alreadyHasLabel = false;
+            for (Label existingLabel : labels) {
+                if (existingLabel.getLabelId() == label.getLabelId()) {
+                    alreadyHasLabel = true;
+                    break;
                 }
-
-                modified = true;
-                break;
             }
-        }
 
+            if (!alreadyHasLabel) {
+                labels.add(label);
+            }
+
+            modified = true;
+            break;
+        }
         if (modified) {
             writeTransactions(transactions);
         }
@@ -567,25 +585,27 @@ public class FinanceDataAccess implements
         boolean modified = false;
 
         for (Transaction t : transactions) {
-            if (t.getId() == id) {
-                List<Label> labels = t.getLabels();
-                if (labels != null) {
-                    int before = labels.size();
-                    labels.removeIf(l -> l.getLabelId() == labelId);
+            if (t.getId() != id)
+                continue;
 
-                    // Check if removal happened before adding Uncategorized
-                    if (labels.size() != before) {
-                        modified = true;
-                    }
+            List<Label> labels = t.getLabels();
 
-                    if (labels.isEmpty()) {
-                        Label uncategorized = getUncategorizedLabel();
-                        if (uncategorized != null) {
-                            labels.add(uncategorized);
-                        }
-                    }
-                }
+            if (labels == null)
                 break;
+
+            int before = labels.size();
+            labels.removeIf(l -> l.getLabelId() == labelId);
+
+            // Check if removal happened before adding Uncategorized
+            if (labels.size() != before) {
+                modified = true;
+            }
+
+            if (labels.isEmpty()) {
+                Label uncategorized = getUncategorizedLabel();
+                if (uncategorized != null) {
+                    labels.add(uncategorized);
+                }
             }
         }
 
@@ -597,29 +617,29 @@ public class FinanceDataAccess implements
     @Override
     public void updateLabel(Label label) {
         JSONObject root = readLabelRoot();
-        JSONArray arr = root.optJSONArray("labels");
+        JSONArray arr = root.optJSONArray(LABELS);
         if (arr == null) {
             return;
         }
 
         for (int i = 0; i < arr.length(); i++) {
             JSONObject obj = arr.getJSONObject(i);
-            if (obj.optInt("labelId") == label.getLabelId()) {
-                obj.put("labelName", label.getLabelName());
-                obj.put("color", label.getColor());
-                obj.put("description", label.getDescription() == null ? "" : label.getDescription());
+            if (obj.optInt(LABEL_ID) == label.getLabelId()) {
+                obj.put(LABEL_NAME, label.getLabelName());
+                obj.put(COLOR, label.getColor());
+                obj.put(DESCRIPTION, label.getDescription() == null ? "" : label.getDescription());
                 break;
             }
         }
 
-        root.put("labels", arr);
+        root.put(LABELS, arr);
         writeLabelRoot(root);
     }
 
     @Override
     public void createLabel(Label label) {
         JSONObject root = readLabelRoot();
-        JSONArray arr = root.optJSONArray("labels");
+        JSONArray arr = root.optJSONArray(LABELS);
         if (arr == null) {
             arr = new JSONArray();
         }
@@ -629,7 +649,7 @@ public class FinanceDataAccess implements
             int nextId = 1;
             for (int i = 0; i < arr.length(); i++) {
                 JSONObject obj = arr.getJSONObject(i);
-                int existingId = obj.optInt("labelId", 0);
+                int existingId = obj.optInt(LABEL_ID, 0);
                 if (existingId >= nextId) {
                     nextId = existingId + 1;
                 }
@@ -638,32 +658,32 @@ public class FinanceDataAccess implements
         }
 
         JSONObject obj = new JSONObject();
-        obj.put("labelId", label.getLabelId());
-        obj.put("labelName", label.getLabelName());
-        obj.put("color", label.getColor());
-        obj.put("description", label.getDescription() == null ? "" : label.getDescription());
+        obj.put(LABEL_ID, label.getLabelId());
+        obj.put(LABEL_NAME, label.getLabelName());
+        obj.put(COLOR, label.getColor());
+        obj.put(DESCRIPTION, label.getDescription() == null ? "" : label.getDescription());
         arr.put(obj);
 
-        root.put("labels", arr);
+        root.put(LABELS, arr);
         writeLabelRoot(root);
     }
 
     @Override
     public Label getLabelById(int labelId) {
         JSONObject root = readLabelRoot();
-        JSONArray arr = root.optJSONArray("labels");
+        JSONArray arr = root.optJSONArray(LABELS);
         if (arr == null) {
             return null;
         }
 
         for (int i = 0; i < arr.length(); i++) {
             JSONObject obj = arr.getJSONObject(i);
-            if (obj.optInt("labelId") == labelId) {
+            if (obj.optInt(LABEL_ID) == labelId) {
                 return new Label(
-                        obj.optInt("labelId"),
-                        obj.optString("labelName"),
-                        obj.optString("color"),
-                        obj.optString("description"));
+                        obj.optInt(LABEL_ID),
+                        obj.optString(LABEL_NAME),
+                        obj.optString(COLOR),
+                        obj.optString(DESCRIPTION));
             }
         }
         return null;
@@ -672,14 +692,14 @@ public class FinanceDataAccess implements
     @Override
     public boolean labelExists(int userid, String labelName) {
         JSONObject root = readLabelRoot();
-        JSONArray arr = root.optJSONArray("labels");
+        JSONArray arr = root.optJSONArray(LABELS);
         if (arr == null) {
             return false;
         }
 
         for (int i = 0; i < arr.length(); i++) {
             JSONObject obj = arr.getJSONObject(i);
-            if (obj.optString("labelName").equalsIgnoreCase(labelName)) {
+            if (obj.optString(LABEL_NAME).equalsIgnoreCase(labelName)) {
                 return true;
             }
         }
@@ -690,7 +710,7 @@ public class FinanceDataAccess implements
     public List<Label> getAllLabelsByUser(int userid) {
         List<Label> result = new ArrayList<>();
         JSONObject root = readLabelRoot();
-        JSONArray arr = root.optJSONArray("labels");
+        JSONArray arr = root.optJSONArray(LABELS);
         if (arr == null) {
             return result;
         }
@@ -698,10 +718,10 @@ public class FinanceDataAccess implements
         for (int i = 0; i < arr.length(); i++) {
             JSONObject obj = arr.getJSONObject(i);
             result.add(new Label(
-                    obj.optInt("labelId"),
-                    obj.optString("labelName"),
-                    obj.optString("color"),
-                    obj.optString("description")));
+                    obj.optInt(LABEL_ID),
+                    obj.optString(LABEL_NAME),
+                    obj.optString(COLOR),
+                    obj.optString(DESCRIPTION)));
         }
         return result;
     }
@@ -709,20 +729,20 @@ public class FinanceDataAccess implements
     @Override
     public void deleteLabel(int labelId) {
         JSONObject root = readLabelRoot();
-        JSONArray arr = root.optJSONArray("labels");
+        JSONArray arr = root.optJSONArray(LABELS);
         if (arr == null) {
             return;
         }
 
         for (int i = 0; i < arr.length(); i++) {
             JSONObject obj = arr.getJSONObject(i);
-            if (obj.optInt("labelId") == labelId) {
+            if (obj.optInt(LABEL_ID) == labelId) {
                 arr.remove(i);
                 break;
             }
         }
 
-        root.put("labels", arr);
+        root.put(LABELS, arr);
         writeLabelRoot(root);
     }
 
