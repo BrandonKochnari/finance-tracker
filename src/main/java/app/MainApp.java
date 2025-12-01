@@ -124,7 +124,7 @@ public class MainApp extends JFrame {
         navPanel.setBackground(new Color(230, 230, 230));
         navPanel.setOpaque(true);
 
-        String[] navItems = { "Search", "Budget", "Graph", "Optimize" };
+        String[] navItems = { "Search", "Budget", "Graph", "Optimize", "Filter" };
         addButtons(navPanel, navItems);
 
         navPanel.add(Box.createVerticalGlue());
@@ -156,6 +156,10 @@ public class MainApp extends JFrame {
                     }
                     case "Optimize": {
                         OptimizeApp.start();
+                        break;
+                    }
+                    case "Filter": {
+                        FilterApp.start(dataAccess);
                         break;
                     }
                 }
