@@ -14,7 +14,6 @@ import java.util.List;
 
 public class FilterTransactionsView extends JFrame {
 
-    private FilterTransactionsController controller;
     private FilterTransactionsViewModel viewModel;
 
     private JComboBox<String> labelComboBox;
@@ -24,7 +23,6 @@ public class FilterTransactionsView extends JFrame {
     public FilterTransactionsView(FilterTransactionsController controller,
             FilterTransactionsViewModel viewModel,
             LabelDataAccessInterface dataAccess) {
-        this.controller = controller;
         this.viewModel = viewModel;
 
         setTitle("Filter Transactions by Label");

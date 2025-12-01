@@ -59,13 +59,10 @@ public class MainApp extends JFrame {
 
         // Call the add transaction use case
         JButton addExp = new JButton("Add Expense");
-        addExp.addActionListener(e ->
-            TransactionApp.start(dataAccess, "Expense", mainApp));
-
+        addExp.addActionListener(e -> TransactionApp.start(dataAccess, "Expense", mainApp));
 
         JButton addInc = new JButton("Add Income");
-        addInc.addActionListener(e ->
-                TransactionApp.start(dataAccess, "Income", mainApp));
+        addInc.addActionListener(e -> TransactionApp.start(dataAccess, "Income", mainApp));
 
         addExp.setPreferredSize(new Dimension(200, 50));
         addInc.setPreferredSize(new Dimension(200, 50));
@@ -160,6 +157,7 @@ public class MainApp extends JFrame {
                     case "Filter": {
                         FilterApp.start(dataAccess);
                         break;
+                    }
                     default: {
                         JOptionPane.showMessageDialog(null, "Invalid item");
                     }

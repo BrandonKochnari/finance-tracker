@@ -567,12 +567,13 @@ public class FinanceDataAccess implements
                 }
             }
 
-                break;
+            if (!alreadyHasLabel) {
+                labels.add(label);
+                modified = true;
             }
-
-            modified = true;
             break;
         }
+
         if (modified) {
             writeTransactions(transactions);
         }
@@ -586,33 +587,24 @@ public class FinanceDataAccess implements
         for (Transaction t : transactions) {
             if (t.getId() == (long) id) {
                 List<Label> labels = t.getLabels();
-                if (labels != null) {
-                    int before = labels.size();
-                    labels.removeIf(l -> l.getLabelId() == labelId);
+                if (labels == null)
+                    break;
 
-                    // Check if removal happened before adding Uncategorized
-                    if (labels.size() != before) {
-                        modified = true;
-                    }
+                int before = labels.size();
+                labels.removeIf(l -> l.getLabelId() == labelId);
 
-            List<Label> labels = t.getLabels();
-
-            if (labels == null)
-                break;
-
-            int before = labels.size();
-            labels.removeIf(l -> l.getLabelId() == labelId);
-
-            // Check if removal happened before adding Uncategorized
-            if (labels.size() != before) {
-                modified = true;
-            }
-
-            if (labels.isEmpty()) {
-                Label uncategorized = getUncategorizedLabel();
-                if (uncategorized != null) {
-                    labels.add(uncategorized);
+                // Check if removal happened before adding Uncategorized
+                if (labels.size() != before) {
+                    modified = true;
                 }
+
+                if (labels.isEmpty()) {
+                    Label uncategorized = getUncategorizedLabel();
+                    if (uncategorized != null) {
+                        labels.add(uncategorized);
+                    }
+                }
+                break;
             }
         }
 
