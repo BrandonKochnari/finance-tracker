@@ -158,7 +158,7 @@ public class MainApp extends JFrame {
                         break;
                     }
                     default: {
-                        //Should never happen
+                        JOptionPane.showMessageDialog(null, "Invalid item");
                     }
                 }
             });

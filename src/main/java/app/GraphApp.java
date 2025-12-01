@@ -11,13 +11,11 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GraphApp {
+
     private GraphApp(){
         throw new IllegalStateException("Utility class");
     }
-
     public static void start(FinanceDataAccess financeDataAccess) {
-        // Use the shared FinanceDataAccess instance
-
         // Set up presenter and view model
         GraphViewModel viewModel = new GraphViewModel();
         GraphPresenter presenter = new GraphPresenter(viewModel);
