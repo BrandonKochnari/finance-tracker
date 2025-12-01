@@ -60,13 +60,12 @@ public class MainApp extends JFrame {
         // Call the add transaction use case
         JButton addExp = new JButton("Add Expense");
         addExp.addActionListener(e ->
-            TransactionApp.start(dataAccess, "Expense", mainApp)
-        );
+            TransactionApp.start(dataAccess, "Expense", mainApp));
+
 
         JButton addInc = new JButton("Add Income");
         addInc.addActionListener(e ->
-            TransactionApp.start(dataAccess, "Income", mainApp)
-        );
+                TransactionApp.start(dataAccess, "Income", mainApp));
 
         addExp.setPreferredSize(new Dimension(200, 50));
         addInc.setPreferredSize(new Dimension(200, 50));
@@ -255,8 +254,7 @@ public class MainApp extends JFrame {
                     transaction,
                     1, // Default user ID
                     mainApp::refreshUI,
-                    dataAccess
-            );
+                    dataAccess);
             assignView.setVisible(true);
         });
     }

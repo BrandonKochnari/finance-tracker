@@ -16,7 +16,7 @@ public class BudgetApp {
         private static final String YEAR_OVERVIEW = "YEAR_OVERVIEW";
 
         private BudgetApp() {
-                // Prevent instantiation (utility class)
+            throw new IllegalStateException("Utility class");
         }
 
         public static void start(FinanceDataAccess dataAccess) {

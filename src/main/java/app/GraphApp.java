@@ -4,7 +4,6 @@ import data_access.FinanceDataAccess;
 import interface_adapter.graph.GraphController;
 import interface_adapter.graph.GraphPresenter;
 import interface_adapter.graph.GraphViewModel;
-import use_case.graph.GraphDataAccessInterface;
 import use_case.graph.GraphInteractor;
 import view.graph.GraphPanel;
 

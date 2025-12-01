@@ -6,6 +6,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class SearchApp {
+    private SearchApp(){
+        throw new IllegalStateException("Utility class");
+    }
 
     private SearchApp() {
         // Prevent instantiation (utility class)
@@ -67,6 +70,8 @@ public class SearchApp {
                         OptimizeApp.start();
                         frame.dispose();
                     }
+                    default ->
+                        errorLabel.setText("Unknown view: \"" + text + "\"");
                 }
             };
 

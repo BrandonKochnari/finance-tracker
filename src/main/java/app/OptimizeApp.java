@@ -10,6 +10,10 @@ import view.optimize.OptimizeView;
 import javax.swing.*;
 
 public class OptimizeApp {
+    private OptimizeApp(){
+        throw new IllegalStateException("Utility class");
+    }
+
     public static void start() {
         OptimizeViewModel viewModel = new OptimizeViewModel();
         OptimizePresenter presenter = new OptimizePresenter(viewModel);
