@@ -12,8 +12,8 @@ import java.util.List;
 public class MainApp extends JFrame {
     private static final int WIDTH = 800;
     private static final int HEIGHT = 600;
-    private final FinanceDataAccess dataAccess;
-    private JPanel centerPanel;
+    private final transient FinanceDataAccess dataAccess;
+    private final JPanel centerPanel;
 
     public MainApp(FinanceDataAccess dataAccess) {
         super("Finance UI");
@@ -59,14 +59,13 @@ public class MainApp extends JFrame {
 
         // Call the add transaction use case
         JButton addExp = new JButton("Add Expense");
-        addExp.addActionListener(e -> {
-            TransactionApp.start(dataAccess, "Expense", mainApp);
-        });
+        addExp.addActionListener(e ->
+            TransactionApp.start(dataAccess, "Expense", mainApp));
+
 
         JButton addInc = new JButton("Add Income");
-        addInc.addActionListener(e -> {
-            TransactionApp.start(dataAccess, "Income", mainApp);
-        });
+        addInc.addActionListener(e ->
+                TransactionApp.start(dataAccess, "Income", mainApp));
 
         addExp.setPreferredSize(new Dimension(200, 50));
         addInc.setPreferredSize(new Dimension(200, 50));
@@ -161,6 +160,8 @@ public class MainApp extends JFrame {
                     case "Filter": {
                         FilterApp.start(dataAccess);
                         break;
+                    default: {
+                        JOptionPane.showMessageDialog(null, "Invalid item");
                     }
                 }
             });
@@ -255,7 +256,7 @@ public class MainApp extends JFrame {
                     controller,
                     transaction,
                     1, // Default user ID
-                    () -> mainApp.refreshUI(),
+                    mainApp::refreshUI,
                     dataAccess);
             assignView.setVisible(true);
         });
