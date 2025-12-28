@@ -2,7 +2,7 @@
 
 A personal finance tracking application designed to help users manage budgets, track transactions, and analyze spending patterns using a clean, modular architecture.
 
-> **Note:** This repository is owned by another contributor. It is showcased here to highlight my contributions to system design and core functionality.
+> **Note:** The original repository is owned by another contributor. It is showcased here to highlight my contributions to system design and core functionality.
 
 ---
 
