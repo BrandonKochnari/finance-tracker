@@ -45,7 +45,7 @@ This structure keeps business logic independent of frameworks and UI concerns.
 - **User story 1 (Ken Taniguchi):** As a user, I want to log income and expenses so that I can keep track of my finances.
 - **User story 2 (Qi Li):** As a user, I want to label my expenses by categories so that I can sort through costs more easily.
 - **User story 3 (Ken Tran):** As a user, I want to filter and track my expenses by category so that I can see what I’m spending my money on.
-- **User story 4 (Brandon Kochnari):** As a user, I want to see my spending relative to a monthly budget so that I can understand how much I spend.
+- ***User story 4 (Brandon Kochnari):** As a user, I want to see my spending relative to a monthly budget so that I can understand how much I spend.*
 - **User story 5 (Chuck Cheng):** As a user, I want to view all my spending data in a comprehensive graph so that I can visualize where my money is going.
 - **User story 6 (Oliver Denis):** As a user, I want to see options to optimize my spending so that I can find new ways to save money.
 
