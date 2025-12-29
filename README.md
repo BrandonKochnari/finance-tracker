@@ -8,7 +8,7 @@ A personal finance tracking application designed to help users manage budgets, t
 
 ## Overview
 
-The Finance Tracker is a full-stack application focused on clarity, maintainability, and scalability. The project emphasizes separation of concerns and clean architecture principles, making it easy to extend features such as budgeting logic, analytics, and data persistence.
+The Finance Tracker is a java application focused on clarity, maintainability, and scalability. The project emphasizes separation of concerns and clean architecture principles, making it easy to extend features such as budgeting logic, analytics, and data persistence.
 
 **Project goals:**
 - Clear domain modeling for financial data
